@@ -3,6 +3,16 @@
     package="com.utoronto.timemng.app"
     android:installLocation="auto">
 
+    <!--<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />-->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission android:name="com.utoronto.timemng.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.utoronto.timemng.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -36,14 +46,4 @@
             <!--</intent-filter>-->
         <!--</receiver>-->
     </application>
-
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <permission android:name="com.utoronto.timemng.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.utoronto.timemng.permission.C2D_MESSAGE" />
-    <uses-permission android:name="com.google.android.c2dm.permission.SEND" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 </manifest>
