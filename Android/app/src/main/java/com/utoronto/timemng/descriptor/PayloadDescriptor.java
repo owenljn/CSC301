@@ -5,17 +5,17 @@ package com.utoronto.timemng.descriptor;
  */
 public class PayloadDescriptor {
     private final int payloadAction;
-    private final Month month;
+    private final Year year;
 
     /**
      * The default constructor.
      * @param payloadAction the integer value for payload action.
-     * @param month         the Month object.
+     * @param yr            the Year object.
      */
-    public PayloadDescriptor(final int payloadAction, final Month month) {
-        if (null != month) {
+    public PayloadDescriptor(final int payloadAction, final Year yr) {
+        if (null != yr) {
             this.payloadAction = payloadAction;
-            this.month = month;
+            this.year = yr;
         } else {
             throw new IllegalArgumentException("Cannot construct PayloadDescriptor with null" +
                     "month");
@@ -32,9 +32,9 @@ public class PayloadDescriptor {
 
     /**
      * Gets the month for the action.
-     * @return  the Month object.
+     * @return  the Year object.
      */
-    public Month getMonth() {
-        return this.month;
+    public Year getYear() {
+        return this.year;
     }
 }
