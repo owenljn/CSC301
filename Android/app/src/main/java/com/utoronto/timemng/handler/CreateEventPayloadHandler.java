@@ -3,17 +3,21 @@ package com.utoronto.timemng.handler;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+import com.utoronto.timemng.descriptor.Month;
 
 /**
  * Date: 2014-10-26.
  */
-public class CreateTaskPayloadHandler implements PayloadHandler {
+public class CreateEventPayloadHandler implements PayloadHandler {
 
     private static final String TAG = "c2dm_task";
     private final String payload;
+    private final Month month;
 
-    public CreateTaskPayloadHandler(final String payload) {
+    //TODO: Remove payload from the constructor. It's here for testing purposes for now.
+    public CreateEventPayloadHandler(final String payload, Month month) {
         this.payload = payload;
+        this.month = month;
     }
 
     @Override
