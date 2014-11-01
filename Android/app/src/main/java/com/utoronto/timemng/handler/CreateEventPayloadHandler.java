@@ -1,8 +1,12 @@
 package com.utoronto.timemng.handler;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.descriptor.Year;
 
 /**
@@ -22,6 +26,11 @@ public class CreateEventPayloadHandler implements PayloadHandler {
 
     @Override
     public void execute(final Context context) {
+//        TextView textBox = new TextView(context);
+//        textBox.setText(this.payload);
+//        RelativeLayout l1 = (RelativeLayout) findViewById(R.id.activity_core);
+//        l1.addView(textBox);
+
         Log.d(TAG, "Received Message: " + this.payload);
 
         // show temporary message on the screen.... delete this after

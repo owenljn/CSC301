@@ -1,9 +1,10 @@
 package com.utoronto.timemng.handler;
 
 
-import com.utoronto.timemng.descriptor.Year;
-import com.utoronto.timemng.descriptor.Month;
+import com.utoronto.timemng.descriptor.*;
 import com.utoronto.timemng.descriptor.type.PayloadAction;
+import com.utoronto.timemng.descriptor.type.WhichDay;
+import com.utoronto.timemng.descriptor.type.WhichMonth;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,17 +18,25 @@ public class PayloadFactory {
         // TODO: 1. De-serialize payload into a POJO class "PayloadDescriptor.class"
 
         // TODO: provide different handlers based on the content of the payload...
+        // TODO: Remove, here for testing purposes.
         int value = 1;
         final PayloadAction payloadAction = PayloadAction.lookup(value);
-//        Collection<Month> monthList = new ArrayList<Month>();
-//        Month month = new Month();
-//        monthList.add(month);
-//        Year year = new Year(2014, monthList);
-//        return new CreateEventPayloadHandler(payload, year);
+        Event event = new Event("TestEvent", 5, 30, 6, 30, null, false, null);
+        Collection<Event> eventList = new ArrayList<Event>();
+        eventList.add(event);
+        Day day = new Day(31, WhichDay.FRIDAY, eventList);
+        Collection<Day> dayList = new ArrayList<Day>();
+        dayList.add(day);
+        Week week = new Week(dayList);
+        Collection<Week> weekList = new ArrayList<Week>();
+        weekList.add(week);
+        Month month = new Month(WhichMonth.OCTOBER, weekList);
+        Collection<Month> monthList = new ArrayList<Month>();
+        monthList.add(month);
+        Year year = new Year(2014, monthList);
         switch (payloadAction) {
             case CREATE_EVENT:
-                return null;
-//                return new CreateEventPayloadHandler(payload, year);
+                return new CreateEventPayloadHandler(payload, year);
             case DELETE_EVENT:
                 return new DeleteEventPayloadHandler();
             case UPDATE_EVENT:
