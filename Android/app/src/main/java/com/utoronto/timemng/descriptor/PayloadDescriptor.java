@@ -36,7 +36,7 @@ public class PayloadDescriptor {
      * Gets the month for the action.
      * @return  the Year object.
      */
-    public Collection<Event> getYear() {
+    public Collection<Event> getEvents() {
         return this.events;
     }
 }

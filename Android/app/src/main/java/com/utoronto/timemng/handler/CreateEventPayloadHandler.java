@@ -25,10 +25,6 @@ public class CreateEventPayloadHandler implements PayloadHandler {
 
     @Override
     public void execute(final Context context) {
-        TextView textBox = new TextView(context.getApplicationContext());
-        textBox.setText(this.payload);
-//        RelativeLayout l1 = (RelativeLayout) findViewById(R.id.main_layout);
-//        l1.addView(textBox);
         Log.d(TAG, "Received Message: " + this.payload);
 
         // show temporary message on the screen.... delete this after
