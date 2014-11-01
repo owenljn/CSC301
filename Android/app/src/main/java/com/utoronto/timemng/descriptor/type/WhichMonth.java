@@ -40,7 +40,7 @@ public enum WhichMonth {
      * @param month string name of the month.
      * @return      the type for the month, or null if month name invalid.
      */
-    public WhichMonth lookup(final String month) {
+    public static WhichMonth lookup(final String month) {
         for (final WhichMonth m : values()) {
             if (month.equals(m.getValue())) {
                 return m;

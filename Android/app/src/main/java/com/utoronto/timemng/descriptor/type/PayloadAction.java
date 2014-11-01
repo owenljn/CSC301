@@ -32,7 +32,7 @@ public enum PayloadAction {
      * @param actionValue   the integer value for the action.
      * @return              the type of action.
      */
-    public PayloadAction lookup(final int actionValue) {
+    public static PayloadAction lookup(final int actionValue) {
         for (final PayloadAction p : values()) {
             if (p.getValue() == actionValue) {
                 return p;

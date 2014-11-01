@@ -60,7 +60,7 @@ public enum WhichDay {
      * @param strDay    day of the week string.
      * @return          type for day of the week.
      */
-    public WhichDay lookup(final String strDay) {
+    public static WhichDay lookup(final String strDay) {
         for (final WhichDay d : values()) {
             if (strDay.equals(d.getDayStr())) {
                 return d;
