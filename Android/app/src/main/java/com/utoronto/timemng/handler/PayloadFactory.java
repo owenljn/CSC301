@@ -16,10 +16,11 @@ public class PayloadFactory {
         // TODO: 1. De-serialize payload into a POJO class "PayloadDescriptor.class"
 
         // TODO: provide different handlers based on the content of the payload...
-        Collection<Month> monthList = new ArrayList<Month>();
-        Month month = new Month();
-        monthList.add(month);
-        Year year = new Year(2014, monthList);
-        return new CreateEventPayloadHandler(payload, year);
+        return null;
+//        Collection<Month> monthList = new ArrayList<Month>();
+//        Month month = new Month();
+//        monthList.add(month);
+//        Year year = new Year(2014, monthList);
+//        return new CreateEventPayloadHandler(payload, year);
     }
 }

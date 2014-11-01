@@ -1,4 +1,4 @@
-package com.utoronto.timemng.descriptor;
+package com.utoronto.timemng.descriptor.type;
 
 /**
  * Defines the possible actions that can be implemented on the payload.
@@ -15,7 +15,7 @@ public enum PayloadAction {
      * Default constructor.
      * @param actionValue   the numeric value for the action type.
      */
-    PayloadAction(int actionValue) {
+    PayloadAction(final int actionValue) {
         this.value = actionValue;
     }
 
@@ -32,8 +32,8 @@ public enum PayloadAction {
      * @param actionValue   the integer value for the action.
      * @return              the type of action.
      */
-    public PayloadAction lookup(int actionValue) {
-        for (PayloadAction p : values()) {
+    public PayloadAction lookup(final int actionValue) {
+        for (final PayloadAction p : values()) {
             if (p.getValue() == actionValue) {
                 return p;
             }
