@@ -1,17 +1,241 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/my_layout_test"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.utoronto.timemng.app.CoreActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:id="@+id/main_layout"
+              android:orientation="vertical"
+              android:padding="6dp">
+    <LinearLayout android:id="@+id/top_panel"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <RelativeLayout
+                android:id="@+id/prog_title"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="12">
+            <TextView android:id="@+id/app_title"
+                      android:text="@string/app_title"
+                      android:layout_width="match_parent"
+                      android:layout_height="40dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/prog_buttons"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="9">
+            <Button android:id="@+id/add_button"
+                    android:text="@string/add_button"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"/>
+            <Button android:id="@+id/remove_button"
+                    android:text="@string/remove_button"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_toRightOf="@id/add_button"
+                    android:layout_gravity="center"/>
+        </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:text="@string/hello_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout android:id="@+id/month_panel"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:id="@+id/month_text"
+                  android:text="@string/which_month"
+                  android:textAllCaps="true"
+                  android:textStyle="bold"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout android:id="@+id/weekday_panel"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/customborder">
+        <RelativeLayout
+                android:id="@+id/monday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/monday_text"
+                      android:text="@string/monday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/tuesday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/tuesday_text"
+                      android:text="@string/tuesday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/wednesday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/wednesday_text"
+                      android:text="@string/wednesday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/thursday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/thursday_text"
+                      android:text="@string/thursday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/friday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/friday_text"
+                      android:text="@string/friday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/saturday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/saturday_text"
+                      android:text="@string/saturday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/sunday"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="14">
+            <TextView android:id="@+id/sunday_text"
+                      android:text="@string/sunday"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="center_horizontal"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/calendar_box"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:background="@drawable/customborder">
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/details_box"
+                  android:orientation="vertical"
+                  android:layout_width="fill_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:background="@drawable/customborder">
+        <RelativeLayout
+                android:id="@+id/details_title"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_title_text"
+                      android:text="@string/details_title_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_titlebox"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_titlebox_txt"
+                      android:text="@string/details_title_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_time"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_time_text"
+                      android:text="@string/details_time_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_timebox"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_timebox_txt"
+                      android:text="@string/details_time_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_location"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_loc_text"
+                      android:text="@string/details_loc_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_location_box"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_locbox_text"
+                      android:text="@string/details_loc_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_note"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_note_text"
+                      android:text="@string/details_note_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:id="@+id/details_notebox"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView android:id="@+id/details_notebox_txt"
+                      android:text="@string/details_note_text"
+                      android:layout_width="fill_parent"
+                      android:layout_height="fill_parent"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/sutmit_box"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="end">
+        <Button android:layout_width="100dp"
+                android:text="@string/submit_button"
+                android:layout_height="40dp"/>
+    </LinearLayout>
+</LinearLayout>

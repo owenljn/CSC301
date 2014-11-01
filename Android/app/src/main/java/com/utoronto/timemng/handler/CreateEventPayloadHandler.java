@@ -1,14 +1,12 @@
 package com.utoronto.timemng.handler;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.utoronto.timemng.app.CoreActivity;
-import com.utoronto.timemng.app.R;
-import com.utoronto.timemng.descriptor.Year;
+import com.utoronto.timemng.descriptor.Event;
+
+import java.util.Collection;
 
 /**
  * Date: 2014-10-26.
@@ -17,19 +15,19 @@ public class CreateEventPayloadHandler implements PayloadHandler {
 
     private static final String TAG = "c2dm_task";
     private final String payload;
-    private final Year year;
+    private final Collection<Event> events;
 
     //TODO: Remove payload from the constructor. It's here for testing purposes for now.
-    public CreateEventPayloadHandler(final String payload, Year year) {
+    public CreateEventPayloadHandler(final String payload, Collection<Event> events) {
         this.payload = payload;
-        this.year = year;
+        this.events = events;
     }
 
     @Override
     public void execute(final Context context) {
         TextView textBox = new TextView(context.getApplicationContext());
         textBox.setText(this.payload);
-//        RelativeLayout l1 = (RelativeLayout) findViewById(R.id.my_layout_test);
+//        RelativeLayout l1 = (RelativeLayout) findViewById(R.id.main_layout);
 //        l1.addView(textBox);
         Log.d(TAG, "Received Message: " + this.payload);
 
