@@ -52,7 +52,8 @@
     <LinearLayout android:id="@+id/weekday_panel"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
-                  android:layout_height="wrap_content">
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/customborder">
         <RelativeLayout
                 android:id="@+id/monday"
                 android:layout_width="0dip"
@@ -136,14 +137,16 @@
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="0dp"
-                  android:layout_weight="1">
+                  android:layout_weight="1"
+                  android:background="@drawable/customborder">
     </LinearLayout>
 
     <LinearLayout android:id="@+id/details_box"
                   android:orientation="vertical"
                   android:layout_width="fill_parent"
                   android:layout_height="0dp"
-                  android:layout_weight="1">
+                  android:layout_weight="1"
+                  android:background="@drawable/customborder">
         <RelativeLayout
                 android:id="@+id/details_title"
                 android:layout_width="fill_parent"
