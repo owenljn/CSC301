@@ -3,8 +3,6 @@ package com.utoronto.timemng.handler;
 
 import com.utoronto.timemng.descriptor.*;
 import com.utoronto.timemng.descriptor.type.PayloadAction;
-import com.utoronto.timemng.descriptor.type.WhichDay;
-import com.utoronto.timemng.descriptor.type.WhichMonth;
 
 import java.util.ArrayList;
 import java.util.Collection;

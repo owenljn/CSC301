@@ -16,12 +16,12 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "c2dm receiver";
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
 
         if (null != intent.getAction() && intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
             Log.d(TAG, intent.getAction());
             Log.d(TAG, intent.getStringExtra("payload"));
-            if (intent.getExtras() != null) {
+            if (null != intent.getExtras()) {
                 final Bundle bundle = intent.getExtras();
 
                 final String payload = bundle.getString("payload");
