@@ -24,19 +24,9 @@ public class PayloadFactory {
         Event event = new Event("TestEvent", 5, 30, 6, 30, null, false, null);
         Collection<Event> eventList = new ArrayList<Event>();
         eventList.add(event);
-        Day day = new Day(31, WhichDay.FRIDAY, eventList);
-        Collection<Day> dayList = new ArrayList<Day>();
-        dayList.add(day);
-        Week week = new Week(dayList);
-        Collection<Week> weekList = new ArrayList<Week>();
-        weekList.add(week);
-        Month month = new Month(WhichMonth.OCTOBER, weekList);
-        Collection<Month> monthList = new ArrayList<Month>();
-        monthList.add(month);
-        Year year = new Year(2014, monthList);
         switch (payloadAction) {
             case CREATE_EVENT:
-                return new CreateEventPayloadHandler(payload, year);
+                return new CreateEventPayloadHandler(payload, eventList);
             case DELETE_EVENT:
                 return new DeleteEventPayloadHandler();
             case UPDATE_EVENT:

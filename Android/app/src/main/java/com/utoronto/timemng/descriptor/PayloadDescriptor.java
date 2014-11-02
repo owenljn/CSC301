@@ -1,21 +1,23 @@
 package com.utoronto.timemng.descriptor;
 
+import java.util.Collection;
+
 /**
  * Contains the type of action (e.g. create, delete, update event), and the month.
  */
 public class PayloadDescriptor {
     private final int payloadAction;
-    private final Year year;
+    private final Collection<Event> events;
 
     /**
      * The default constructor.
      * @param payloadAction the integer value for payload action.
-     * @param yr            the Year object.
+     * @param events        collection of events.
      */
-    public PayloadDescriptor(final int payloadAction, final Year yr) {
-        if (null != yr) {
+    public PayloadDescriptor(final int payloadAction, final Collection<Event> events) {
+        if (null != events && !events.isEmpty()) {
             this.payloadAction = payloadAction;
-            this.year = yr;
+            this.events = events;
         } else {
             throw new IllegalArgumentException("Cannot construct PayloadDescriptor with null" +
                     "month");
@@ -34,7 +36,7 @@ public class PayloadDescriptor {
      * Gets the month for the action.
      * @return  the Year object.
      */
-    public Year getYear() {
-        return this.year;
+    public Collection<Event> getEvents() {
+        return this.events;
     }
 }
