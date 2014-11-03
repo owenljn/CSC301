@@ -64,32 +64,8 @@ public class CoreActivity extends Activity {
             if (this.regid.isEmpty()) {
                 registerInBackground();
             }
-//
-//            List<String> myStringArray = new ArrayList<String>();
-//            myStringArray.add("");
-//            myStringArray.add("1");
-//            myStringArray.add("2");
-//            myStringArray.add("3");
-//            myStringArray.add("4");
-//            myStringArray.add("5");
-//            myStringArray.add("6");
-//            myStringArray.add("7");
-//            myStringArray.add("8");
-//            myStringArray.add("9");
-//            myStringArray.add("10");
-//            myStringArray.add("11");
-//
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                    R.layout.list_item, myStringArray);
-//            GridView gridView = (GridView) findViewById(R.id.calendar_grid);
-//            gridView.setAdapter(adapter);
-            CalendarMonthConstructor calendar = new CalendarMonthConstructor(this);
-//            final Calendar thisMonth = Calendar.getInstance(); // Get this month calendar.
-//            CalendarGridAdapter adapter = new CalendarGridAdapter(this.context, thisMonth); // Create an adapter for this month.
-//
-//            final GridView gridView = (GridView) findViewById(R.id.calendar_grid); // My calendar grid.
-//            Log.i(TAG, "Did i get the correct grid view: "+gridView);
-//            gridView.setAdapter(adapter);
+
+            CalendarMonthConstructor calendar = new CalendarMonthConstructor(this.context, this);
         }
         // TODO: could add some layout actions here
     }
