@@ -17,10 +17,10 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, intent.getAction());
-        Log.d(TAG, intent.getStringExtra("payload"));
 
         if (null != intent.getAction() && intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
+            Log.d(TAG, intent.getAction());
+            Log.d(TAG, intent.getStringExtra("payload"));
             if (intent.getExtras() != null) {
                 final Bundle bundle = intent.getExtras();
 
