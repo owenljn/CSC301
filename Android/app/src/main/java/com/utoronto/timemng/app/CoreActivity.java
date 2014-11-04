@@ -54,6 +54,7 @@ public class CoreActivity extends Activity {
 
     private static final String TAG = "c2dm_app";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,90 +111,162 @@ public class CoreActivity extends Activity {
         add_btn.setText("Create Task");
         ll.addView(add_btn);
         add_btn.setOnClickListener(new OnClickListener() {
-
-
         	public void onClick(View v){
-        		//Create popup
-		        final PopupWindow pw = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-		        //Set params
-		        pw.setContentView(popLayout);
-		        pw.setFocusable(true);
-		        
-		        // Parameters 
-		        
-		        View contentView = pw.getContentView();
-
-		        final EditText name=new EditText(getApplicationContext());
-		        name.setHint("Name");
-		        popLayout.addView(name);
-		        
-		        final EditText date=new EditText(getApplicationContext());
-		        date.setHint("date");
-		        popLayout.addView(date);
-		      //  final String usernameString = usernameInput.getText().toString();
-		        //final String passwordString = passwordInput.getText().toString();
-
-		        // create add stuff here button
-		        final Button showStuff=new Button(getApplicationContext());
-		        showStuff.setText("Add");
-		        popLayout.addView(showStuff);
-		        pw.showAtLocation(scrl, 0, 0, Gravity.BOTTOM);
-		        showStuff.setOnClickListener(new OnClickListener() {
-		        	
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						
-						// Dynamically add stuff here
-				        TextView tv=new TextView(getApplicationContext());
-				        tv.setText("Event: "+ name.getText() + " At Date: " + date.getText());
-				        tv.setTextColor(Color.BLUE);
-				        ll.addView(tv);
-				        
-				        //Add info to server's DB here 
-				        
-						pw.dismiss();
-						popLayout.removeAllViews();
-					}
-		        });
-		        
-		        // create another button
-		        final Button coolButton=new Button(getApplicationContext());
-		        coolButton.setText("Close");
-		        popLayout.addView(coolButton);
-		        coolButton.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						pw.dismiss();
-						popLayout.removeAllViews();
-					}
-		        });
-		        /*
-		        EditText et=new EditText(getApplicationContext());
-		        et.setText(i+")");
-		        et.setTextColor(Color.BLUE);
-		        ll.addView(et); */
-        	//}
-        /*
-		    public void onClick(View v) {
-		    // TODO Auto-generated method stub
-			        i++;
-			        TextView tv=new TextView(getApplicationContext());
-			        tv.setText("Event:"+ event.getName());
-			        tv.setTextColor(Color.BLUE);
-			        
-			        tv.setBackgroundColor(Color.RED);
-			        ll.addView(tv);
-			        EditText et=new EditText(getApplicationContext());
-			        et.setText(i+")");
-			        et.setTextColor(Color.BLUE);
-			        ll.addView(et); 
-		        }*/
+        		addPopUp(popLayout,scrl,ll);
         	}});
         this.setContentView(scrl);
 	}
+    
+    public void addPopUp(final LinearLayout popLayout, final ScrollView scrl,final LinearLayout ll){
+    	
+    	//Create popup
+        final PopupWindow pw = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        //Set params
+        pw.setContentView(popLayout);
+        pw.setFocusable(true);
+        
+        // Parameters 
+        
+        View contentView = pw.getContentView();
+
+        final EditText name=new EditText(getApplicationContext());
+        name.setHint("Name");
+        popLayout.addView(name);
+        
+        final EditText date=new EditText(getApplicationContext());
+        date.setHint("date");
+        popLayout.addView(date);
+
+        // create add stuff here button
+        final Button showStuff=new Button(getApplicationContext());
+        showStuff.setText("Add");
+        popLayout.addView(showStuff);
+        pw.showAtLocation(scrl,Gravity.CENTER,0, 0);
+        showStuff.setOnClickListener(new OnClickListener() {
+        	
+			@Override
+			public void onClick(View v) {
+				addButton(popLayout,scrl,ll,name,date);
+				pw.dismiss();
+				popLayout.removeAllViews();
+			}
+
+        });
+        
+        // create close button
+        final Button closeButton=new Button(getApplicationContext());
+        closeButton.setText("Close");
+        popLayout.addView(closeButton);
+        closeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				pw.dismiss();
+				popLayout.removeAllViews();
+			}
+        });
+    }
+    
+    private void addButton(final LinearLayout popLayout, final ScrollView scrl,final LinearLayout ll,EditText name, EditText date){
+		// Dynamically add stuff here
+		final LinearLayout eventView = new LinearLayout(getApplicationContext());
+		eventView.setMinimumWidth(ll.getWidth());
+		eventView.setOrientation(LinearLayout.HORIZONTAL);
+		
+        final TextView nametv=new TextView(getApplicationContext());
+        nametv.setText("Event: "+ name.getText());
+        nametv.setTextColor(Color.BLUE);
+        eventView.addView(nametv);
+        
+		
+        final TextView datetv=new TextView(getApplicationContext());
+        datetv.setText(" At Date: " + date.getText());
+        datetv.setTextColor(Color.RED);
+        eventView.addView(datetv);
+        
+        final Button deleteStuff=new Button(getApplicationContext());
+        deleteStuff.setText("Delete");
+        deleteStuff.setOnClickListener(new OnClickListener(){
+        	
+        	public void onClick(View v){
+        		eventView.removeAllViews();
+        	}
+        	
+        });
+        final Button updateStuff=new Button(getApplicationContext());
+        updateStuff.setText("Update");
+        updateStuff.setOnClickListener(new OnClickListener(){
+        	
+        	public void onClick(View v){
+        		
+        		editPopUp(popLayout,scrl,ll,eventView, nametv, datetv);
+        	}
+        	
+        });
+        eventView.addView(updateStuff);
+        eventView.addView(deleteStuff);
+        //Add info to server's DB here 
+        ll.addView(eventView);
+    }
+    
+	private void editPopUp(final LinearLayout popLayout, final ScrollView scrl,
+			final LinearLayout ll, final LinearLayout targEvent, final TextView nametv, final TextView datetv) {
+		
+		//Create popup
+        final PopupWindow pw = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        //Set params
+        pw.setContentView(popLayout);
+        pw.setFocusable(true);
+        
+        // Parameters 
+        
+        View contentView = pw.getContentView();
+        String tvname = ((String) nametv.getText()).substring(7);
+        String tvdate = ((String) datetv.getText()).substring(10);
+        
+        
+        final EditText name=new EditText(getApplicationContext());
+        name.setHint(tvname);
+        popLayout.addView(name);
+        
+        final EditText date=new EditText(getApplicationContext());
+        date.setHint(tvdate);
+        popLayout.addView(date);
+
+        // create add stuff here button
+        final Button showStuff=new Button(getApplicationContext());
+        showStuff.setText("Update");
+        popLayout.addView(showStuff);
+        pw.showAtLocation(scrl,Gravity.CENTER,0, 0);
+        showStuff.setOnClickListener(new OnClickListener() {
+        	
+			@Override
+			public void onClick(View v) {
+				//addButton(popLayout,scrl,ll,name,date);
+				datetv.setText(" At Date: " + date.getText());
+				nametv.setText("Event: " + name.getText());
+				pw.dismiss();
+				popLayout.removeAllViews();
+			}
+
+        });
+        
+        // create close button
+        final Button closeButton=new Button(getApplicationContext());
+        closeButton.setText("Close");
+        popLayout.addView(closeButton);
+        closeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				pw.dismiss();
+				popLayout.removeAllViews();
+			}
+        });
+	}
+
 
 
 	private boolean checkPlayServices() {
