@@ -1,18 +1,35 @@
 package com.utoronto.timemng.app;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.utoronto.timemng.descriptor.Event;
 
 import java.io.IOException;
 
@@ -27,6 +44,7 @@ public class CoreActivity extends Activity {
     GoogleCloudMessaging gcm;
     String regid;
     Context context;
+    int i = 0;
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -58,10 +76,127 @@ public class CoreActivity extends Activity {
                 registerInBackground();
             }
         }
+        // Show current tasks, pulled from server's DB
+        // (receive payload of all events, show on phone. is easy to implement, but no server has been implemented yet)
+        
         // TODO: could add some layout actions here
+        addStuff(new Event("Event1", 1, "Date")); 
+        // How are we going to pass event information?
+        // How is it sent here?
+        // GCM sends message, which is parsed
+        // 
     }
 
-    private boolean checkPlayServices() {
+    
+    private void addStuff(final Event event) {
+    	//I copied all of this from http://androiddesk.wordpress.com/2012/08/05/creating-dynamic-views-in-android/
+        final ScrollView scrl=new ScrollView(this);
+        final LinearLayout ll=new LinearLayout(this);
+        final LinearLayout popLayout = new LinearLayout(this);
+        
+        TextView popText = new TextView(this);
+        popText.setText("Enter your task");
+        popLayout.setOrientation(LinearLayout.VERTICAL);
+        popLayout.addView(popText);
+        
+        ll.setOrientation(LinearLayout.VERTICAL);
+        
+        scrl.addView(ll);
+        
+        //Alertbox stuff
+
+        // create button
+        final Button add_btn=new Button(this);
+        add_btn.setText("Create Task");
+        ll.addView(add_btn);
+        add_btn.setOnClickListener(new OnClickListener() {
+
+
+        	public void onClick(View v){
+        		//Create popup
+		        final PopupWindow pw = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		        //Set params
+		        pw.setContentView(popLayout);
+		        pw.setFocusable(true);
+		        
+		        // Parameters 
+		        
+		        View contentView = pw.getContentView();
+
+		        final EditText name=new EditText(getApplicationContext());
+		        name.setHint("Name");
+		        popLayout.addView(name);
+		        
+		        final EditText date=new EditText(getApplicationContext());
+		        date.setHint("date");
+		        popLayout.addView(date);
+		      //  final String usernameString = usernameInput.getText().toString();
+		        //final String passwordString = passwordInput.getText().toString();
+
+		        // create add stuff here button
+		        final Button showStuff=new Button(getApplicationContext());
+		        showStuff.setText("Add");
+		        popLayout.addView(showStuff);
+		        pw.showAtLocation(scrl, 0, 0, Gravity.BOTTOM);
+		        showStuff.setOnClickListener(new OnClickListener() {
+		        	
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						
+						// Dynamically add stuff here
+				        TextView tv=new TextView(getApplicationContext());
+				        tv.setText("Event: "+ name.getText() + " At Date: " + date.getText());
+				        tv.setTextColor(Color.BLUE);
+				        ll.addView(tv);
+				        
+				        //Add info to server's DB here 
+				        
+						pw.dismiss();
+						popLayout.removeAllViews();
+					}
+		        });
+		        
+		        // create another button
+		        final Button coolButton=new Button(getApplicationContext());
+		        coolButton.setText("Close");
+		        popLayout.addView(coolButton);
+		        coolButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						pw.dismiss();
+						popLayout.removeAllViews();
+					}
+		        });
+		        /*
+		        EditText et=new EditText(getApplicationContext());
+		        et.setText(i+")");
+		        et.setTextColor(Color.BLUE);
+		        ll.addView(et); */
+        	//}
+        /*
+		    public void onClick(View v) {
+		    // TODO Auto-generated method stub
+			        i++;
+			        TextView tv=new TextView(getApplicationContext());
+			        tv.setText("Event:"+ event.getName());
+			        tv.setTextColor(Color.BLUE);
+			        
+			        tv.setBackgroundColor(Color.RED);
+			        ll.addView(tv);
+			        EditText et=new EditText(getApplicationContext());
+			        et.setText(i+")");
+			        et.setTextColor(Color.BLUE);
+			        ll.addView(et); 
+		        }*/
+        	}});
+        this.setContentView(scrl);
+	}
+
+
+	private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
