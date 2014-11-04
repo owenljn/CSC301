@@ -9,6 +9,7 @@ import java.util.Collection;
 /**
  * 02/11/2014 13:33.
  */
+// TODO: modify this so that it doesn't store events, etc.
 public class Day {
     private static final String TAG = "c2dm_Day";
     private final Calendar dayDate;
@@ -20,6 +21,7 @@ public class Day {
      * @param dayDate   the date for this day.
      */
     public Day(final Calendar dayDate, final String dateString) {
+        super();
         this.dayDate = dayDate;
         this.dateString = dateString;
     }

@@ -10,20 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.utoronto.timemng.calendar.CalendarGridAdapter;
 import com.utoronto.timemng.calendar.CalendarMonthConstructor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
-
+/**
+ * Core activity for the application.
+ */
 public class CoreActivity extends Activity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -146,7 +142,7 @@ public class CoreActivity extends Activity {
         new AsyncTask() {
             @Override
             protected String doInBackground(final Object[] params) {
-                String msg = "";
+                String msg;
                 try {
                     if (null == CoreActivity.this.gcm) {
                         CoreActivity.this.gcm = GoogleCloudMessaging.getInstance(getApplicationContext());

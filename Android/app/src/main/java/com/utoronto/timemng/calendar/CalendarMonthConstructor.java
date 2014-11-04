@@ -19,14 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Constructs the calendar for the month. Creates the callendar for the current month by default.
+ * A different month can be selected via setMonth method.
  */
 public class CalendarMonthConstructor extends LinearLayout {
-    // TODO: Make receiver inner class for this.
     private static final String TAG = "c2dm_CalendarMonthConstructor";
     private Calendar selMonth;
-    private CalendarGridAdapter adapter;
-    private Activity activity;
+    private final CalendarGridAdapter adapter;
+    private final Activity activity;
 
     /**
      * Default constructor for this class.
@@ -34,7 +34,7 @@ public class CalendarMonthConstructor extends LinearLayout {
      * @param activity   activity.
      */
     public CalendarMonthConstructor(final Context context, final Activity activity) {
-        super(context); // Call to default constructor for LinearLayout
+        super(context);
         this.activity = activity;
         this.selMonth = Calendar.getInstance(); // Get this month calendar.
         this.adapter = new CalendarGridAdapter(activity, this.selMonth); // Create an adapter.
@@ -59,21 +59,13 @@ public class CalendarMonthConstructor extends LinearLayout {
     }
 
     /**
-     * Optional constructor for this class.
-     * @param context   application context.
-     */
-    public CalendarMonthConstructor(final Context context) {
-        super(context, null);
-    }
-
-    /**
      * Returns string representation of selected month and year.
      */
     private void whichMonthString() {
         final TextView monthName = (TextView) this.activity.findViewById(R.id.month_text);
-        final CharSequence month = DateFormat.format("MMMM", this.selMonth); // month
-        final CharSequence year = DateFormat.format("yyyy", this.selMonth); // year
-        monthName.setText(String.format("%s %s", month.toString(), year.toString()));
+        final CharSequence month = DateFormat.format("MMMM", this.selMonth).toString(); // month
+        final CharSequence year = DateFormat.format("yyyy", this.selMonth).toString(); // year
+        monthName.setText(String.format("%s %s", month, year));
     }
 
     /**
@@ -111,7 +103,7 @@ public class CalendarMonthConstructor extends LinearLayout {
     /**
      * Receives push notifications from the Google server.
      */
-    public class GcmBroadcastReceiver extends BroadcastReceiver {
+    public static class GcmBroadcastReceiver extends BroadcastReceiver {
 
         private static final String TAG = "c2dm receiver";
         private final Map<String, List<Event>> updatedDays = new HashMap<String, List<Event>>();

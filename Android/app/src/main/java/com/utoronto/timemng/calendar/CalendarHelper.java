@@ -3,7 +3,7 @@ import java.util.Calendar;
 
 
 /**
- * 02/11/2014 11:58.
+ * Contains several helper methods for the calendar.
  */
 public class CalendarHelper {
 

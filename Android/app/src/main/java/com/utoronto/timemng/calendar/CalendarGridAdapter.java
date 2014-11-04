@@ -13,7 +13,7 @@ import com.utoronto.timemng.app.R;
 import java.util.Calendar;
 
 /**
- * 02/11/2014 12:08.
+ * Used for constructing a calendar grid.
  */
 public class CalendarGridAdapter extends BaseAdapter {
 
