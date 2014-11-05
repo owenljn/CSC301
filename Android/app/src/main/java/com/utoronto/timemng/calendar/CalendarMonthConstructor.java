@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utoronto.timemng.app.R;
+import com.utoronto.timemng.daytasks.EventListConstructor;
 import com.utoronto.timemng.event.DayDto;
 import com.utoronto.timemng.event.EventDto;
 
@@ -50,15 +48,19 @@ public class CalendarMonthConstructor {
         // TODO: return a map of day of month to position.
         // TODO: request event list for the month from server.
         // TODO: mark days of month that contain an event.
+        final LinearLayout eventBox = (LinearLayout) activity.findViewById(R.id.dayevents_box);
+        eventBox.setVisibility(View.VISIBLE);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-//                Toast.makeText(CalendarMonthConstructor.this.activity.getApplicationContext(),
-//                        "" + position, Toast.LENGTH_SHORT).show();
+                int dayOfMonth = Integer.parseInt(((TextView) view).getText().toString());
+                final EventListConstructor eventListConstructor =
+                        new EventListConstructor(CalendarMonthConstructor.this.activity,
+                                CalendarMonthConstructor.this.eventMap.get(dayOfMonth));
 
-                Toast.makeText(CalendarMonthConstructor.this.activity.getApplicationContext(),
-                        ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(CalendarMonthConstructor.this.activity.getApplicationContext(),
+//                        ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
