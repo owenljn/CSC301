@@ -3,7 +3,7 @@
     package="com.utoronto.timemng.app"
     android:installLocation="auto">
 
-    <!--<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="19" />-->
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -29,7 +29,7 @@
         </activity>
 
         <receiver
-                android:name="com.utoronto.timemng.c2dm.GcmBroadcastReceiver"
+                android:name="com.utoronto.timemng.gcm.GcmBroadcastReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -39,14 +39,5 @@
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
             </intent-filter>
         </receiver>
-
-        <meta-data android:name="com.google.android.gms.version"
-                   android:value="@integer/google_play_services_version" />
-
-        <!--<receiver android:name="com.utoronto.timemng.c2dm.GcmBroadcastReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RETRY" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
     </application>
 </manifest>

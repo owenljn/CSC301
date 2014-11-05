@@ -1,0 +1,21 @@
+code:
+
+        final Event event1 = new Event(1, "Project", 2014, 10, 6, 5, "12:30:00", "13:00:00");
+        final Event event2 = new Event(2, "Test", 2014, 10, 6, 5, "13:00:00", "14:00:00");
+        final Event event3 = new Event(3, "Gym", 2014, 10, 6, 5, "17:00:00", "18:00:00");
+        final Event event4 = new Event(4, "Project", 2014, 10, 7, 6, "12:30:00", "13:00:00");
+        final Event event5 = new Event(5, "Appointment", 2014, 10, 7, 6, "16:00:00", "16:15:00");
+
+generated string:
+
+{"days":[{"year":2014,"month":10,"day":6,"events":[{"eventId":1,"eventTitle":"Project","year":2014,"month":10,"dayOfMonth":6,"dayOfWeek":5,"startTime":"12:30:00","endTime":"13:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":2,"eventTitle":"Test","year":2014,"month":10,"dayOfMonth":6,"dayOfWeek":5,"startTime":"13:00:00","endTime":"14:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":3,"eventTitle":"Gym","year":2014,"month":10,"dayOfMonth":6,"dayOfWeek":5,"startTime":"17:00:00","endTime":"18:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false}]},{"year":2014,"month":10,"day":7,"events":[{"eventId":4,"eventTitle":"Project","year":2014,"month":10,"dayOfMonth":7,"dayOfWeek":6,"startTime":"12:30:00","endTime":"13:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":5,"eventTitle":"Appointment","year":2014,"month":10,"dayOfMonth":7,"dayOfWeek":6,"startTime":"16:00:00","endTime":"16:15:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false}]}]}
+
+code:
+
+        final EventDto event1 = new EventDto(1, "Project", 2014, 10, 8, 7, "12:30:00", "13:00:00", null, null, null, false, null, false);
+        final EventDto event2 = new EventDto(2, "Test", 2014, 10, 8, 7, "13:00:00", "14:00:00", null, null, null, false, null, false);
+        final EventDto event3 = new EventDto(3, "Gym", 2014, 10, 9, 7, "17:00:00", "18:00:00", null, null, null, false, null, false);
+        final EventDto event4 = new EventDto(4, "Project", 2014, 10, 9, 7, "12:30:00", "13:00:00", null, null, null, false, null, false);
+        final EventDto event5 = new EventDto(5, "Appointment", 2014, 10, 9, 7, "16:00:00", "16:15:00", null, null, null, false, null, false);
+
+{"days":[{"year":2014,"month":10,"day":8,"events":[{"eventId":1,"eventTitle":"Project","year":2014,"month":10,"dayOfMonth":8,"dayOfWeek":7,"startTime":"12:30:00","endTime":"13:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":2,"eventTitle":"Test","year":2014,"month":10,"dayOfMonth":8,"dayOfWeek":7,"startTime":"13:00:00","endTime":"14:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":3,"eventTitle":"Gym","year":2014,"month":10,"dayOfMonth":9,"dayOfWeek":7,"startTime":"17:00:00","endTime":"18:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false}]},{"year":2014,"month":10,"day":9,"events":[{"eventId":4,"eventTitle":"Project","year":2014,"month":10,"dayOfMonth":9,"dayOfWeek":7,"startTime":"12:30:00","endTime":"13:00:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false},{"eventId":5,"eventTitle":"Appointment","year":2014,"month":10,"dayOfMonth":9,"dayOfWeek":7,"startTime":"16:00:00","endTime":"16:15:00","location":null,"description":null,"inviteeEmails":null,"recurring":false,"recursOn":null,"isAllDay":false}]}]}
