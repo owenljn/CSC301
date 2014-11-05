@@ -3,42 +3,58 @@ package com.utoronto.timemng.calendar;
 import java.util.Calendar;
 
 /**
- * 02/11/2014 13:33.
+ * A single day cell. Used in GridView for constructing the calendar.
  */
-// TODO: modify this so that it doesn't store events, etc.
 public class DayCell {
+
+    /**
+     * Tag for logging purposes.
+     */
     private static final String TAG = "c2dm daycell";
-    private final Calendar dayDate;
-    private final int dateInt;
+
+    /**
+     * Calendar with a particular day of the month.
+     */
+    private final Calendar dayCal;
+
+    /**
+     * Day of the month as integer.
+     */
+    private final int dayOfMonth;
 
     /**
      * Carries information for the calendar day.
-     * @param dayDate   the date for this day.
+     * @param dayCal        the date for this day.
+     * @param dayOfMonth    the day of the month in integer format.
      */
-    public DayCell(final Calendar dayDate, final int dateInt) {
+    public DayCell(final Calendar dayCal, final int dayOfMonth) {
         super();
-        this.dayDate = dayDate;
-        this.dateInt = dateInt;
+        this.dayCal = dayCal;
+        this.dayOfMonth = dayOfMonth;
     }
 
     /**
      * Gets Calendar object with relevant date.
      * @return  calendar object for this day.
      */
-    public Calendar getDayDate() {
-        return this.dayDate;
+    public Calendar getDayCal() {
+        return this.dayCal;
     }
 
     /**
-     * Gets the string number representation of this day of month.
-     * @return  string representation of day of month for this day.
+     * Gets the integer representation of this day of month.
+     * @return  number representation of day of month for this DayCell object.
      */
-    public int getDateInt() {
-        return this.dateInt;
+    public int getDayOfMonth() {
+        return this.dayOfMonth;
     }
 
+    /**
+     * Converts day of month to string.
+     * @return  string representation for day of month.
+     */
     @Override
     public String toString() {
-        return Integer.toString(getDateInt());
+        return Integer.toString(getDayOfMonth());
     }
 }

@@ -33,6 +33,7 @@ public class DayDto {
                   @JsonProperty(MONTH) final int month,
                   @JsonProperty(DAY) final int day,
                   @JsonProperty(EVENTS) final List<EventDto> events) {
+        super();
         this.year = year;
         this.month = month;
         this.day = day;

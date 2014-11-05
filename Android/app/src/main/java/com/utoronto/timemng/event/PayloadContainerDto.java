@@ -17,10 +17,11 @@ public class PayloadContainerDto {
 
     /**
      * The default constructor.
-     * @param days        list of events.
+     * @param days  list of events.
      */
     @JsonCreator
     public PayloadContainerDto(@JsonProperty(DAYS) final List<DayDto> days) {
+        super();
         if (null != days) {
             this.days = days;
         } else {

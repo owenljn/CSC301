@@ -8,20 +8,21 @@ import com.utoronto.timemng.event.EventDto;
 import java.util.List;
 
 /**
- * Constructs a list of events for the selected day of the month.
+ * Constructs a ListView object of events for the selected day of the month.
  */
 public class EventListConstructor {
+    /**
+     * A tag for logging purposes.
+     */
     private static final String TAG = "c2dm event list";
-    private final Activity activity;
-    private final List<EventDto> events;
-    private final EventListAdapter adapter;
-    private final ListView listView;
 
-    public EventListConstructor(final Activity activity, List<EventDto> events) {
-        this.activity = activity;
-        this.events = events;
-        this.listView = (ListView) activity.findViewById(R.id.event_list);
-        this.adapter = new EventListAdapter(activity, events);
-        this.listView.setAdapter(this.adapter);
+    public EventListConstructor(final Activity activity, final List<EventDto> events) {
+        super();
+        // Find the list view.
+        final ListView listView = (ListView) activity.findViewById(R.id.event_list);
+        // Create an adapter.
+        final EventListAdapter adapter = new EventListAdapter(activity, events);
+        // Set adapter.
+        listView.setAdapter(adapter);
     }
 }

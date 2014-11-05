@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Created by Alina Gvozdik
- * 04/11/2014 18:35.
+ * Ignore. Created for testing serialisation/de-serialisation.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DayDescriptorDto {
