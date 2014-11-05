@@ -141,7 +141,7 @@ public class CoreActivity extends Activity {
         final Button showStuff=new Button(getApplicationContext());
         showStuff.setText("Add");
         popLayout.addView(showStuff);
-        pw.showAtLocation(scrl,Gravity.CENTER,0, 0);
+        pw.showAtLocation(scrl,Gravity.TOP,0, 200);
         showStuff.setOnClickListener(new OnClickListener() {
         	
 			@Override
@@ -227,11 +227,11 @@ public class CoreActivity extends Activity {
         
         
         final EditText name=new EditText(getApplicationContext());
-        name.setHint(tvname);
+        name.setText(tvname);
         popLayout.addView(name);
         
         final EditText date=new EditText(getApplicationContext());
-        date.setHint(tvdate);
+        date.setText(tvdate);
         popLayout.addView(date);
 
         // create add stuff here button
