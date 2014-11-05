@@ -1,17 +1,17 @@
 package com.utoronto.timemng.calendar;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import android.graphics.Color;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utoronto.timemng.app.R;
-import com.utoronto.timemng.deserializer.DeserializePayload;
-import com.utoronto.timemng.event.Event;
+import com.utoronto.timemng.event.DayDto;
+import com.utoronto.timemng.event.EventDto;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,26 +19,31 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Constructs the calendar for the month. Creates the callendar for the current month by default.
+ * Constructs the calendar for the month. Creates the calendar for the current month by default.
  * A different month can be selected via setMonth method.
  */
-public class CalendarMonthConstructor extends LinearLayout {
-    private static final String TAG = "c2dm_CalendarMonthConstructor";
+public class CalendarMonthConstructor {
+    private static CalendarMonthConstructor calendarMonthConstructor;
+    private static final String TAG = "c2dm calendar";
     private Calendar selMonth;
     private final CalendarGridAdapter adapter;
     private final Activity activity;
+    private final GridView gridView;
+    private final Map<Integer, List<EventDto>> eventMap;
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * Default constructor for this class.
-     * @param context    application context
      * @param activity   activity.
      */
-    public CalendarMonthConstructor(final Context context, final Activity activity) {
-        super(context);
+    private CalendarMonthConstructor(final Activity activity) {
+        super();
         this.activity = activity;
+        this.eventMap = new HashMap<Integer, List<EventDto>>();
         this.selMonth = Calendar.getInstance(); // Get this month calendar.
         this.adapter = new CalendarGridAdapter(activity, this.selMonth); // Create an adapter.
-        final GridView gridView = (GridView) activity.findViewById(R.id.calendar_grid); // My calendar grid.
+        this.gridView = (GridView) activity.findViewById(R.id.calendar_grid); // My calendar grid.
 
         whichMonthString();
         gridView.setAdapter(this.adapter);
@@ -48,7 +53,7 @@ public class CalendarMonthConstructor extends LinearLayout {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
 //                Toast.makeText(CalendarMonthConstructor.this.activity.getApplicationContext(),
 //                        "" + position, Toast.LENGTH_SHORT).show();
 
@@ -59,6 +64,30 @@ public class CalendarMonthConstructor extends LinearLayout {
     }
 
     /**
+     * Get the singleton object.
+     * @param activity  activity.
+     * @return          the singleton object.
+     */
+    public static CalendarMonthConstructor getInstance(final Activity activity) {
+        if (null == calendarMonthConstructor) {
+            calendarMonthConstructor = new CalendarMonthConstructor(activity);
+        }
+        return calendarMonthConstructor;
+    }
+
+    /**
+     * Get the already instantiated singleton object.
+     * @return  singleton object.
+     */
+    public static CalendarMonthConstructor getInstance() {
+        if (null != calendarMonthConstructor) {
+            return calendarMonthConstructor;
+        } else {
+            throw new IllegalArgumentException("Class not yet instantiated.");
+        }
+    }
+
+    /**
      * Returns string representation of selected month and year.
      */
     private void whichMonthString() {
@@ -66,6 +95,12 @@ public class CalendarMonthConstructor extends LinearLayout {
         final CharSequence month = DateFormat.format("MMMM", this.selMonth).toString(); // month
         final CharSequence year = DateFormat.format("yyyy", this.selMonth).toString(); // year
         monthName.setText(String.format("%s %s", month, year));
+
+//        try {
+//            testJSON();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -100,35 +135,44 @@ public class CalendarMonthConstructor extends LinearLayout {
         this.adapter.makeCalendarArray();
     }
 
-    /**
-     * Receives push notifications from the Google server.
-     */
-    public static class GcmBroadcastReceiver extends BroadcastReceiver {
-
-        private static final String TAG = "c2dm receiver";
-        private final Map<String, List<Event>> updatedDays = new HashMap<String, List<Event>>();
-
-        @Override
-        public void onReceive(final Context context, final Intent intent) {
-
-            if (null != intent.getAction() && intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
-                Log.d(TAG, intent.getAction());
-                Log.d(TAG, intent.getStringExtra("payload"));
-                if (null != intent.getExtras()) {
-                    final Bundle bundle = intent.getExtras();
-
-                    final String payload = bundle.getString("payload");
-                    final List<Event> events = DeserializePayload.deserialize(payload);
-
-//                    final PayloadFactory messageFactory = new PayloadFactory();
-//                    final PayloadHandler handler = messageFactory.create(payload);
+//    private void testJSON() throws IOException {
 //
-//                    Log.d(TAG, "Handler: "+handler.getClass().getSimpleName());
-//                    handler.execute(context.getApplicationContext());
-                }
+//        final EventDto event1 = new EventDto(1, "Project", 2014, 10, 8, 7, "12:30:00", "13:00:00", null, null, null, false, null, false);
+//        final EventDto event2 = new EventDto(2, "Test", 2014, 10, 8, 7, "13:00:00", "14:00:00", null, null, null, false, null, false);
+//        final EventDto event3 = new EventDto(3, "Gym", 2014, 10, 9, 7, "17:00:00", "18:00:00", null, null, null, false, null, false);
+//        final EventDto event4 = new EventDto(4, "Project", 2014, 10, 9, 7, "12:30:00", "13:00:00", null, null, null, false, null, false);
+//        final EventDto event5 = new EventDto(5, "Appointment", 2014, 10, 9, 7, "16:00:00", "16:15:00", null, null, null, false, null, false);
+//        final List<EventDto> eventList1 = Arrays.asList(event1, event2, event3);
+//        final List<EventDto> eventList2 = Arrays.asList(event4, event5);
+//        final DayDto day1 = new DayDto(2014, 10, 8, eventList1);
+//        final DayDto day2 = new DayDto(2014, 10, 9, eventList2);
+//        final List<DayDto> dayList = Arrays.asList(day1, day2);
+//        final PayloadContainerDto containerDto = new PayloadContainerDto(dayList);
+//                                                      String aaa = "{\"days\":[{\"year\":2014,\"month\":10,\"day\":8,\"events\":[{\"eventId\":1,\"eventTitle\":\"Project\",\"year\":2014,\"month\":10,\"dayOfMonth\":8,\"dayOfWeek\":7,\"startTime\":\"12:30:00\",\"endTime\":\"13:00:00\",\"location\":null,\"description\":null,\"inviteeEmails\":null,\"recurring\":false,\"recursOn\":null,\"isAllDay\":false},{\"eventId\":2,\"eventTitle\":\"Test\",\"year\":2014,\"month\":10,\"dayOfMonth\":8,\"dayOfWeek\":7,\"startTime\":\"13:00:00\",\"endTime\":\"14:00:00\",\"location\":null,\"description\":null,\"inviteeEmails\":null,\"recurring\":false,\"recursOn\":null,\"isAllDay\":false},{\"eventId\":3,\"eventTitle\":\"Gym\",\"year\":2014,\"month\":10,\"dayOfMonth\":9,\"dayOfWeek\":7,\"startTime\":\"17:00:00\",\"endTime\":\"18:00:00\",\"location\":null,\"description\":null,\"inviteeEmails\":null,\"recurring\":false,\"recursOn\":null,\"isAllDay\":false}]},{\"year\":2014,\"month\":10,\"day\":9,\"events\":[{\"eventId\":4,\"eventTitle\":\"Project\",\"year\":2014,\"month\":10,\"dayOfMonth\":9,\"dayOfWeek\":7,\"startTime\":\"12:30:00\",\"endTime\":\"13:00:00\",\"location\":null,\"description\":null,\"inviteeEmails\":null,\"recurring\":false,\"recursOn\":null,\"isAllDay\":false},{\"eventId\":5,\"eventTitle\":\"Appointment\",\"year\":2014,\"month\":10,\"dayOfMonth\":9,\"dayOfWeek\":7,\"startTime\":\"16:00:00\",\"endTime\":\"16:15:00\",\"location\":null,\"description\":null,\"inviteeEmails\":null,\"recurring\":false,\"recursOn\":null,\"isAllDay\":false}]}]}";
+//        final String json = OBJECT_MAPPER.writeValueAsString(containerDto);
+//
+//        PayloadContainerDto dto = OBJECT_MAPPER.readValue(json, PayloadContainerDto.class);
+//    }
 
+    /**
+     * Populates the map of days to events with events, and marks days on calendar that contain at least
+     * one event.
+     * @param days   one calendar day.
+     */
+    public void populateWithEvents(final List<DayDto> days) {
+        final int year = this.selMonth.get(Calendar.YEAR);
+        final int month = this.selMonth.get(Calendar.MONTH);
+        for (final DayDto day : days) {
+            if (year == day.getYear() && month == day.getMonth()) {
+                final int dayNum = day.getDay();
+                final View view = this.gridView.findViewWithTag(dayNum);
+                this.eventMap.put(dayNum, day.getEvents());
+                if (day.getEvents().isEmpty()) {
+                    view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                } else {
+                    view.setBackgroundColor(Color.parseColor("#C2DFFF"));
+                }
             }
         }
     }
-
 }

@@ -10,31 +10,30 @@
                   android:layout_height="wrap_content">
         <RelativeLayout
                 android:id="@+id/prog_title"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="12">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
             <TextView android:id="@+id/app_title"
                       android:text="@string/app_title"
                       android:layout_width="match_parent"
                       android:layout_height="40dp"/>
         </RelativeLayout>
-        <RelativeLayout
-                android:id="@+id/prog_buttons"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="9">
-            <Button android:id="@+id/add_button"
-                    android:text="@string/add_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"/>
-            <Button android:id="@+id/remove_button"
-                    android:text="@string/remove_button"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_toRightOf="@id/add_button"
-                    android:layout_gravity="center"/>
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+                <!--android:id="@+id/prog_buttons"-->
+                <!--android:layout_width="0dip"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="9">-->
+            <!--<Button android:id="@+id/add_button"-->
+                    <!--android:text="@string/add_button"-->
+                    <!--android:layout_width="80dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_gravity="center"/>-->
+            <!--<Button android:id="@+id/remove_button"-->
+                    <!--android:text="@string/remove_button"-->
+                    <!--android:layout_width="80dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_toRightOf="@id/add_button"-->
+                    <!--android:layout_gravity="center"/>-->
+        <!--</RelativeLayout>-->
     </LinearLayout>
 
     <LinearLayout android:id="@+id/month_panel"
@@ -53,7 +52,8 @@
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
-                  android:background="@drawable/customborder">
+                  android:background="@drawable/customborder"
+                  android:baselineAligned="false">
         <RelativeLayout
                 android:id="@+id/monday"
                 android:layout_width="0dip"
@@ -136,8 +136,7 @@
     <LinearLayout android:id="@+id/calendar_box"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="5"
+                  android:layout_height="wrap_content"
                   android:background="@drawable/customborder">
 
         <GridView android:id="@+id/calendar_grid"
@@ -152,31 +151,33 @@
     <LinearLayout android:id="@+id/dayevents_box"
                   android:orientation="vertical"
                   android:layout_width="fill_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="3"
-                  android:background="@drawable/customborder">
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/customborder"
+                  android:visibility="gone">
         <ListView android:id="@+id/event_list"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
-
         </ListView>
+        <Button android:id="@+id/new_button"
+                android:layout_width="100dp"
+                android:text="@string/add_button"
+                android:layout_height="40dp"
+                android:visibility="invisible"/>
+        <Button android:id="@+id/done_button"
+                android:layout_width="100dp"
+                android:text="@string/done_button"
+                android:layout_height="40dp"
+                android:visibility="invisible"/>
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/sutmit_box"
-                  android:orientation="horizontal"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="end">
-        <Button android:layout_width="100dp"
-                android:text="@string/submit_button"
-                android:layout_height="40dp"/>
-    </LinearLayout>
-    <!--<TextView android:layout_width="match_parent"-->
-              <!--android:layout_height="40dp"-->
-              <!--android:id="@+id/list_item2"-->
-              <!--android:visibility="gone"-->
-              <!--android:text="tst"-->
-              <!--android:gravity="center_horizontal|center_vertical">-->
-
-    <!--</TextView>-->
+    <!--<LinearLayout android:id="@+id/sutmit_box"-->
+                  <!--android:orientation="horizontal"-->
+                  <!--android:layout_width="fill_parent"-->
+                  <!--android:layout_height="wrap_content"-->
+                  <!--android:gravity="end">-->
+        <!--<Button android:layout_width="100dp"-->
+                <!--android:text="@string/submit_button"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:visibility="invisible"/>-->
+    <!--</LinearLayout>-->
 </LinearLayout>

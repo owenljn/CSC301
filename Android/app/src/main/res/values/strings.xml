@@ -20,4 +20,5 @@
     <string name="details_loc_text">Address</string>
     <string name="details_note_text">Note/Details</string>
     <string name="submit_button">Submit</string>
+    <string name="done_button">Done</string>
 </resources>

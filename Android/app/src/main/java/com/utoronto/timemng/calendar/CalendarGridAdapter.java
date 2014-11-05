@@ -11,22 +11,26 @@ import android.widget.TextView;
 import com.utoronto.timemng.app.R;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Used for constructing a calendar grid.
  */
 public class CalendarGridAdapter extends BaseAdapter {
 
-    private static final String TAG = "c2dm_calendar_grid_adapter";
+    private static final String TAG = "c2dm cal grid";
     private final Activity activity; // Application context.
     private Calendar pickedMonth; // Calendar month requested by user.
     private Calendar curMonth; // Current month calendar.
-    private Day[] days; // Collection of days.
+    private DayCell[] dayCells; // Collection of days.
+//    private final Map<Integer, Integer> dayToPosition;
 
     /**
      * Default constructor for this class.
      * @param activity       application context.
      * @param pickedMonth   month requested.
+     *
      */
     public CalendarGridAdapter(final Activity activity, final Calendar pickedMonth) {
         if (null != pickedMonth) {
@@ -34,6 +38,7 @@ public class CalendarGridAdapter extends BaseAdapter {
             this.curMonth = Calendar.getInstance();
             this.pickedMonth = (Calendar) pickedMonth.clone();
             this.pickedMonth.set(Calendar.DAY_OF_MONTH, 1); // Look at first day of month.
+//            this.dayToPosition = new HashMap<Integer, Integer>();
             makeCalendarArray();
         } else {
             Log.i(TAG, "month was set to null in constructor");
@@ -65,30 +70,38 @@ public class CalendarGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Creates an array of correctly placed days for the calendar.
+     * Creates an array of correctly ordered days for the calendar.
      */
     public void makeCalendarArray() {
-        // Initially, the day of the week for the first day of selected month.
-        // Will be used for shifting purposes later.
-        Calendar useMonth = (Calendar) this.pickedMonth.clone();
+        final Calendar useMonth = (Calendar) this.pickedMonth.clone();
         useMonth.set(Calendar.DAY_OF_MONTH, 1);
-        int shiftBy = CalendarHelper.getOffset(useMonth);
-        // Shifting the dates for the calendar so that it aligns with correct days of the week
-        // when it will be placed into the GridView.
+        final int shiftBy = CalendarHelper.getOffset(useMonth);
+        // Shifting to accommodate for the fact that Monday is day number two.
         useMonth.add(Calendar.DATE, -shiftBy);
-        this.days = new Day[42]; // the calendar grid is 6 rows by 7 columns.
-        for (int i = 0; i < this.days.length; i++) {
-            this.days[i] = new Day((Calendar) useMonth.clone(), "" + useMonth.get(Calendar.DAY_OF_MONTH));
+        this.dayCells = new DayCell[42]; // the calendar grid is 6 rows by 7 columns.
+        for (int i = 0; i < this.dayCells.length; i++) {
+            this.dayCells[i] = new DayCell((Calendar) useMonth.clone(), useMonth.get(Calendar.DAY_OF_MONTH));
+//            if (this.pickedMonth.get(Calendar.MONTH) == useMonth.get(Calendar.MONTH)) {
+//                this.dayToPosition.put(useMonth.get(Calendar.DAY_OF_MONTH), i);
+//            }
             useMonth.add(Calendar.DATE, 1); // Go to next day in calendar.
         }
     }
 
     /**
+     * Gets the position on calendar from day of month.
+     * @return  position from day of month.
+     */
+//    public int getPosition(final int dayOfMonth) {
+//        return dayToPosition.get(dayOfMonth);
+//    }
+
+    /**
      * Gets the days array.
      * @return  array of Day objects.
      */
-    private Day[] getDays() {
-        return this.days;
+    private DayCell[] getDayCells() {
+        return this.dayCells;
     }
 
     /**
@@ -97,7 +110,7 @@ public class CalendarGridAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return this.days.length;
+        return this.dayCells.length;
     }
 
     /**
@@ -107,7 +120,7 @@ public class CalendarGridAdapter extends BaseAdapter {
      */
     @Override
     public Object getItem(final int position) {
-        return this.days[position];
+        return this.dayCells[position];
     }
 
     /**
@@ -134,28 +147,30 @@ public class CalendarGridAdapter extends BaseAdapter {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
         final TextView textView;
-        final Day day = this.days[position];
+        final DayCell dayCell = this.dayCells[position];
+        final int dayInt = dayCell.getDateInt();
 
         if (null == row) {
             row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.list_item, parent, false);
         }
 
         textView = (TextView) row.findViewById(R.id.list_item);
-        if (day.getDayDate().get(Calendar.MONTH) == this.pickedMonth.get(Calendar.MONTH)) {
+        if (dayCell.getDayDate().get(Calendar.MONTH) == this.pickedMonth.get(Calendar.MONTH)) {
             textView.setTextColor(Color.BLACK);
+            row.setTag(dayInt);
         } else {
             textView.setTextColor(Color.GRAY);
             row.setFocusable(true);
             row.setClickable(true);
         }
 
-        if (this.curMonth.get(Calendar.YEAR) == day.getDayDate().get(Calendar.YEAR) &&
-                this.curMonth.get(Calendar.MONTH) == day.getDayDate().get(Calendar.MONTH) &&
-                this.curMonth.get(Calendar.DAY_OF_MONTH) == day.getDayDate().get(Calendar.DAY_OF_MONTH)) {
+        if (this.curMonth.get(Calendar.YEAR) == dayCell.getDayDate().get(Calendar.YEAR) &&
+                this.curMonth.get(Calendar.MONTH) == dayCell.getDayDate().get(Calendar.MONTH) &&
+                this.curMonth.get(Calendar.DAY_OF_MONTH) == dayCell.getDayDate().get(Calendar.DAY_OF_MONTH)) {
             textView.setTextColor(Color.RED);
         }
-        textView.setText(day.getDateString());
-        row.setTag(day);
+
+        textView.setText(Integer.toString(dayInt));
         return row;
     }
 }

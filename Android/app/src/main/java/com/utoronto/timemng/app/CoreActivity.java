@@ -1,7 +1,9 @@
 package com.utoronto.timemng.app;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -61,7 +63,7 @@ public class CoreActivity extends Activity {
                 registerInBackground();
             }
 
-            CalendarMonthConstructor calendar = new CalendarMonthConstructor(this.context, this);
+            CalendarMonthConstructor calendar = CalendarMonthConstructor.getInstance(this);
         }
         // TODO: could add some layout actions here
     }
