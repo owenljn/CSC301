@@ -74,10 +74,7 @@ public class CalendarGridAdapter extends BaseAdapter {
         // Clone calendar for selected month as it will be modified.
         final Calendar useMonth = (Calendar) this.pickedMonth.clone();
         useMonth.set(Calendar.DAY_OF_MONTH, 1); // Set to first day of the month.
-        // To determine what day of the week the first day of the selected month falls under, need to
-        // perform a shift. They days of the week preceding that will then be filled in with preceding
-        // month's dates. The day's of the week following the last day of the selected month will be
-        // filled in with dates from the following month.
+        // To backtrack to Monday need to shift by:
         final int shiftBy = CalendarHelper.getOffset(useMonth);
         // Shift the dates so that the calendar can be filled in starting from Monday.
         useMonth.add(Calendar.DATE, -shiftBy);
@@ -144,7 +141,7 @@ public class CalendarGridAdapter extends BaseAdapter {
         final DayCell dayCell = this.dayCells[position]; // the appropriate day cell.
         // Integer value for the month. Note: as per the Calendar API, it appears that month indexing
         // starts from 0, so January is 0, February is 1, etc.
-        final int dayInt = dayCell.getDateInt();
+        final int dayInt = dayCell.getDayOfMonth();
 
         // If this is the first cell of GridView, the grid item layout hasn't yet been inflated.
         if (null == row) {
@@ -154,7 +151,7 @@ public class CalendarGridAdapter extends BaseAdapter {
         // Find the text view by id in the inflated layout.
         textView = (TextView) row.findViewById(R.id.grid_item);
         // If we're looking at current month's dates, then make the day of month text black.
-        if (dayCell.getDayDate().get(Calendar.MONTH) == this.pickedMonth.get(Calendar.MONTH)) {
+        if (dayCell.getDayCal().get(Calendar.MONTH) == this.pickedMonth.get(Calendar.MONTH)) {
             textView.setTextColor(Color.BLACK);
             row.setTag(dayInt);
         // If we're looking at days of month from either preceding or following months, make text gray.
@@ -165,13 +162,13 @@ public class CalendarGridAdapter extends BaseAdapter {
             row.setClickable(true); // but the combination of these two makes the view un-clickable.
         }
         // Mark today in red.
-        if (this.curMonth.get(Calendar.YEAR) == dayCell.getDayDate().get(Calendar.YEAR) &&
-                this.curMonth.get(Calendar.MONTH) == dayCell.getDayDate().get(Calendar.MONTH) &&
-                this.curMonth.get(Calendar.DAY_OF_MONTH) == dayCell.getDayDate().get(Calendar.DAY_OF_MONTH)) {
+        if (this.curMonth.get(Calendar.YEAR) == dayCell.getDayCal().get(Calendar.YEAR) &&
+                this.curMonth.get(Calendar.MONTH) == dayCell.getDayCal().get(Calendar.MONTH) &&
+                this.curMonth.get(Calendar.DAY_OF_MONTH) == dayCell.getDayCal().get(Calendar.DAY_OF_MONTH)) {
             textView.setTextColor(Color.RED);
         }
         // Write correct day of month in this cell.
-        textView.setText(Integer.toString(dayInt));
+        textView.setText(dayCell.toString());
         return row; // Return the layout for cell so that it can be reused for other cells.
     }
 }

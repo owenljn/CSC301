@@ -41,7 +41,7 @@ public class EventDto {
     private final Collection<String> inviteeEmails;
     private final boolean recurring;
     private final List<WeekDay> recursOn;
-    private boolean isAllDay;
+    private final boolean isAllDay;
 
     /**
      * Default constructor for this class.
@@ -70,6 +70,7 @@ public class EventDto {
                     @JsonProperty(RECURRING) final boolean recurring,
                     @JsonProperty(RECURS_ON) final List<WeekDay> recursOn,
                     @JsonProperty(IS_ALL_DAY) final boolean isAllDay) {
+        super();
         if (null != eventTitle) {
             this.eventId = eventId;
             this.eventTitle = eventTitle;

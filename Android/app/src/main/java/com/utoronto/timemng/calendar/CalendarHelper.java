@@ -1,4 +1,9 @@
 package com.utoronto.timemng.calendar;
+import android.util.Log;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utoronto.timemng.event.PayloadContainerDto;
+
+import java.io.IOException;
 import java.util.Calendar;
 
 
@@ -6,40 +11,54 @@ import java.util.Calendar;
  * Contains several helper methods for the calendar.
  */
 public class CalendarHelper {
+    private static final String TAG = "c2dm de-serialise";
+    // Create a new object mapper for de-serialising PayloadContainerDto objects.
+    // Used by calendar to obtain events that will be inserted into it.
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
-     * Default constructor for this class.
+     * Private constructor for this class, as this class only has static methods.
      */
-    public CalendarHelper() {
+    private CalendarHelper() {
     }
 
     /**
-     * There are two possibilities for the system calendar. Monday can be first,
-     * or Sunday can be first.
-     * @return  true iff Monday is the first day of the week.
-     */
-    public static boolean isFirstWeekDayMonday() {
-        return Calendar.MONDAY == Calendar.getInstance().getFirstDayOfWeek();
-    }
-
-    /**
-     * Gets the offset for the given month. Helps with calculating position of day of month in calendar.
+     * Gets the offset for the given month. Allows to map java calendar numbering for days of
+     * the week to our numbering for days of the week.
      * @param month relevant month.
-     * @return      offset for the month.
+     * @return      offset.
      */
     public static int getOffset(final Calendar month) {
-        int shiftBy = month.get(Calendar.DAY_OF_WEEK);
-        // Calendar.MONDAY == 2 and Calendar.SUNDAY == 1 always.
-        // Need to perform different shifts depending on whether Monday is first day of week, or Sunday.
-        if (CalendarHelper.isFirstWeekDayMonday()) {
-            if (Calendar.SUNDAY == shiftBy) {
-                shiftBy = 6;
-            } else {
-                shiftBy = shiftBy - 2;
-            }
-        } else { // It doesn't match our calendar format, need to recalculate.
-            shiftBy = shiftBy - 1;
+        int shiftBy = month.get(Calendar.DAY_OF_WEEK); // Day of the week for first day of the month.
+        // On our calendar SUNDAY is 6, so we have to go 6 days back from first day of current month
+        // to get the date of the previous month that corresponds to Monday.
+        if (Calendar.SUNDAY == shiftBy) {
+            shiftBy = 6;
+            // On java calendar MONDAY through SATURDAY are numbered as such: 2, 3, ..., 7. On our calendar
+            // MONDAY through SATURDAY are numbered as such: 0, 1, ..., 5. The java calendar is two positions
+            // ahead of ours (for days of the week numbering), so to convert the weekday number of first day
+            // of the month from their numbering system to ours, we need to subtract 2 from their weekday for
+            // first day of month to get corresponding weekday in our numbering system.
+        } else {
+            shiftBy = shiftBy - 2;
         }
         return shiftBy;
+    }
+
+    /**
+     * Attempt to de-serialise payload. If the format is not as expected, will not be successful.
+     * @param payload   JSON string representing payload.
+     * @return          a DTO containing the list of days.
+     */
+    public static PayloadContainerDto deserializePayload(final String payload) {
+        PayloadContainerDto container = null; // Initialise our PayloadContainerDto class.
+        try { // Try to de-serialise the class into the PayloadContainerDto object with all the parameters.
+            container = OBJECT_MAPPER.readValue(payload, PayloadContainerDto.class);
+        } catch (final IOException e) {
+            // Don't need to stop the program if payload cannot be de-serialised. Could have been
+            // bad payload. Log the event anyway.
+            Log.i(TAG, "Could not de-serialise payload: "+ payload);
+        }
+        return container;
     }
 }

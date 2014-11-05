@@ -67,8 +67,11 @@ public class CoreActivity extends Activity {
             if (this.regid.isEmpty()) {
                 registerInBackground();
             }
+
+            // Prior to creating the first instance of the class, define the activity that will be used.
+            CalendarMonthConstructor.defineActivity(this);
             // Get an instance of the calendar (only one instance of it since singleton pattern was used).
-            CalendarMonthConstructor.getInstance(this);
+            CalendarMonthConstructor.getInstance();
         }
     }
 

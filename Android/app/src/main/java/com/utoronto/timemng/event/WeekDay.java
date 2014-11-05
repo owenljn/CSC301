@@ -1,29 +1,67 @@
 package com.utoronto.timemng.event;
 
 /**
- * 31/10/2014 21:37.
+ * Contains types for each day of the week.
  */
 public enum WeekDay {
-    SUNDAY(1, "Sunday"),
-    MONDAY(2, "Monday"),
-    TUESDAY(3, "Tuesday"),
-    WEDNESDAY(4, "Wednesday"),
-    THURSDAY(5, "Thursday"),
-    FRIDAY(6, "Friday"),
-    SATURDAY(7, "Saturday");
+    SUNDAY(1) {
+        @Override
+        public String getWeekDayName() {
+            return "Sunday";
+        }
+    },
+    MONDAY(2) {
+        @Override
+        public String getWeekDayName() {
+            return "Monday";
+        }
+    },
+    TUESDAY(3) {
+        @Override
+        public String getWeekDayName() {
+            return "Tuesday";
+        }
+    },
+    WEDNESDAY(4) {
+        @Override
+        public String getWeekDayName() {
+            return "Wednesday";
+        }
+    },
+    THURSDAY(5) {
+        @Override
+        public String getWeekDayName() {
+            return "Thursday";
+        }
+    },
+    FRIDAY(6) {
+        @Override
+        public String getWeekDayName() {
+            return "Friday";
+        }
+    },
+    SATURDAY(7) {
+        @Override
+        public String getWeekDayName() {
+            return "Saturday";
+        }
+    };
 
     private final int dayNum;
-    private final String dayStr;
 
     /**
      * The default constructor for the class.
      * @param dayNum    day number.
-     * @param dayStr    day of the week.
      */
-    WeekDay(final int dayNum, final String dayStr) {
+    WeekDay(final int dayNum) {
         this.dayNum = dayNum;
-        this.dayStr = dayStr;
     }
+
+    /**
+     *  Gets the name of the weekday.
+     * @return  name of weekday as string.
+     */
+    public abstract String getWeekDayName();
 
     /**
      * Gets the day number.
@@ -34,14 +72,6 @@ public enum WeekDay {
     }
 
     /**
-     * Gets the day of the week.
-     * @return  day of the week string.
-     */
-    public String getDayStr() {
-        return this.dayStr;
-    }
-
-    /**
      * Gets the type for day of the week, given day number.
      * @param numDay   day number.
      * @return         type for day of the week.
@@ -49,20 +79,6 @@ public enum WeekDay {
     public WeekDay lookup(final int numDay) {
         for (final WeekDay weekDay : values()) {
             if (numDay == getDayNum()) {
-                return weekDay;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets the type for the day of the week, given day of week string.
-     * @param strDay    day of the week string.
-     * @return          type for day of the week.
-     */
-    public static WeekDay lookup(final String strDay) {
-        for (final WeekDay weekDay : values()) {
-            if (strDay.equals(weekDay.getDayStr())) {
                 return weekDay;
             }
         }
