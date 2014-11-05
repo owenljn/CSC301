@@ -1,11 +1,16 @@
 package com.utoronto.timemng.daytasks;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.event.EventDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +22,11 @@ public class EventListAdapter extends BaseAdapter {
 
     public EventListAdapter(final Activity activity, final List<EventDto> events) {
         this.activity = activity;
-        this.events = events;
+        if (null != events) {
+            this.events = events;
+        } else {
+            this.events = new ArrayList<EventDto>();
+        }
     }
 
     /**
@@ -58,6 +67,19 @@ public class EventListAdapter extends BaseAdapter {
      */
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
-        return null;
+        View row = convertView;
+        final TextView textView;
+        final EventDto event = this.events.get(position);
+        final long eventId = event.getEventId();
+
+        if (null == row) {
+            row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.list_item, parent, false);
+        }
+
+        textView = (TextView) row.findViewById(R.id.list_item);
+        textView.setTextColor(Color.BLACK);
+        textView.setText(event.getEventTitle());
+        row.setTag(eventId);
+        return row;
     }
 }

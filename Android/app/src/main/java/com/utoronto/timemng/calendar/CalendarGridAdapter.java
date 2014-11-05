@@ -11,8 +11,6 @@ import android.widget.TextView;
 import com.utoronto.timemng.app.R;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Used for constructing a calendar grid.
@@ -24,7 +22,6 @@ public class CalendarGridAdapter extends BaseAdapter {
     private Calendar pickedMonth; // Calendar month requested by user.
     private Calendar curMonth; // Current month calendar.
     private DayCell[] dayCells; // Collection of days.
-//    private final Map<Integer, Integer> dayToPosition;
 
     /**
      * Default constructor for this class.
@@ -38,7 +35,6 @@ public class CalendarGridAdapter extends BaseAdapter {
             this.curMonth = Calendar.getInstance();
             this.pickedMonth = (Calendar) pickedMonth.clone();
             this.pickedMonth.set(Calendar.DAY_OF_MONTH, 1); // Look at first day of month.
-//            this.dayToPosition = new HashMap<Integer, Integer>();
             makeCalendarArray();
         } else {
             Log.i(TAG, "month was set to null in constructor");
@@ -81,20 +77,9 @@ public class CalendarGridAdapter extends BaseAdapter {
         this.dayCells = new DayCell[42]; // the calendar grid is 6 rows by 7 columns.
         for (int i = 0; i < this.dayCells.length; i++) {
             this.dayCells[i] = new DayCell((Calendar) useMonth.clone(), useMonth.get(Calendar.DAY_OF_MONTH));
-//            if (this.pickedMonth.get(Calendar.MONTH) == useMonth.get(Calendar.MONTH)) {
-//                this.dayToPosition.put(useMonth.get(Calendar.DAY_OF_MONTH), i);
-//            }
             useMonth.add(Calendar.DATE, 1); // Go to next day in calendar.
         }
     }
-
-    /**
-     * Gets the position on calendar from day of month.
-     * @return  position from day of month.
-     */
-//    public int getPosition(final int dayOfMonth) {
-//        return dayToPosition.get(dayOfMonth);
-//    }
 
     /**
      * Gets the days array.
@@ -151,10 +136,10 @@ public class CalendarGridAdapter extends BaseAdapter {
         final int dayInt = dayCell.getDateInt();
 
         if (null == row) {
-            row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.list_item, parent, false);
+            row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.grid_item, parent, false);
         }
 
-        textView = (TextView) row.findViewById(R.id.list_item);
+        textView = (TextView) row.findViewById(R.id.grid_item);
         if (dayCell.getDayDate().get(Calendar.MONTH) == this.pickedMonth.get(Calendar.MONTH)) {
             textView.setTextColor(Color.BLACK);
             row.setTag(dayInt);

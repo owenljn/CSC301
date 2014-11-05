@@ -41,11 +41,5 @@
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
             </intent-filter>
         </receiver>
-
-        <!--<receiver android:name="com.utoronto.timemng.c2dm.GcmBroadcastReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RETRY" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
     </application>
 </manifest>

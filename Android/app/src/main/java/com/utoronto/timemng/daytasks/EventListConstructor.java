@@ -21,6 +21,7 @@ public class EventListConstructor {
         this.activity = activity;
         this.events = events;
         this.listView = (ListView) activity.findViewById(R.id.event_list);
-        this.adapter = null;
+        this.adapter = new EventListAdapter(activity, events);
+        this.listView.setAdapter(this.adapter);
     }
 }

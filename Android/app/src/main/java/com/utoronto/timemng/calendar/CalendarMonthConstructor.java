@@ -44,13 +44,13 @@ public class CalendarMonthConstructor {
         this.gridView = (GridView) activity.findViewById(R.id.calendar_grid); // My calendar grid.
 
         whichMonthString();
-        gridView.setAdapter(this.adapter);
+        this.gridView.setAdapter(this.adapter);
         // TODO: return a map of day of month to position.
         // TODO: request event list for the month from server.
         // TODO: mark days of month that contain an event.
         final LinearLayout eventBox = (LinearLayout) activity.findViewById(R.id.dayevents_box);
         eventBox.setVisibility(View.VISIBLE);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
