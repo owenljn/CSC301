@@ -1,9 +1,7 @@
 package com.utoronto.timemng.app;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,6 +19,7 @@ import java.io.IOException;
 
 /**
  * Core activity for the application.
+ * Used sample code from: http://developer.android.com/google/gcm/client.html
  */
 public class CoreActivity extends Activity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
