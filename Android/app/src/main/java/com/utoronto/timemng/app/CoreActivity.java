@@ -1,7 +1,9 @@
 package com.utoronto.timemng.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -65,6 +67,9 @@ public class CoreActivity extends Activity {
             CalendarMonthConstructor calendar = CalendarMonthConstructor.getInstance(this);
         }
         // TODO: could add some layout actions here
+        // Pop up a notification window each time a user opens the application
+        // Note this is just a prototype, it will use remote databases in future.
+        Notify("This is your first notification(test)");
     }
 
     private boolean checkPlayServices() {
@@ -221,4 +226,23 @@ public class CoreActivity extends Activity {
         final int id = item.getItemId();
         return R.id.action_settings == id || super.onOptionsItemSelected(item);
     }
+    
+    // This function is a notification prototype which shows a message to user
+	private void Notify(String str){
+		new AlertDialog.Builder(this)
+		.setTitle("Notification window popup test")
+		.setMessage(str)
+		.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) { 
+				// continue with delete
+			}
+		})
+		.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) { 
+				// do nothing
+			}
+		})
+		.setIcon(android.R.drawable.ic_dialog_alert)
+		.show();
+	}
 }
