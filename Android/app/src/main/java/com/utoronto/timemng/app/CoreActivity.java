@@ -25,7 +25,9 @@ public class CoreActivity extends Activity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static final String EXTRA_MESSAGE = "message";
+    // Registration id for the application on GCM service.
     public static final String PROPERTY_REG_ID = "registration_id";
+    // Registered application version.
     private static final String PROPERTY_APP_VERSION = "appVersion";
 
     GoogleCloudMessaging gcm;
@@ -40,10 +42,14 @@ public class CoreActivity extends Activity {
 
     private static final String TAG = "c2dm_app";
 
+    /**
+     * Called on application start.
+     * @param savedInstanceState    saved instance state.
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Use activity_core layout.
         setContentView(R.layout.activity_core);
         this.context = getApplicationContext();
 
@@ -57,16 +63,19 @@ public class CoreActivity extends Activity {
             this.regid = getRegistrationId(this.context);
 
             Log.d(TAG, "Registration Id: "+ this.regid);
-
+            // Register in background if no registration id available.
             if (this.regid.isEmpty()) {
                 registerInBackground();
             }
-
-            CalendarMonthConstructor calendar = CalendarMonthConstructor.getInstance(this);
+            // Get an instance of the calendar (only one instance of it since singleton pattern was used).
+            CalendarMonthConstructor.getInstance(this);
         }
-        // TODO: could add some layout actions here
     }
 
+    /**
+     * Check if Google Play Services are available on the device.
+     * @return  true iff the device is supported.
+     */
     private boolean checkPlayServices() {
         final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (ConnectionResult.SUCCESS != resultCode) {
@@ -196,7 +205,7 @@ public class CoreActivity extends Activity {
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+        // TODO: Implement once server up and running.
     }
 
     @Override
@@ -204,6 +213,11 @@ public class CoreActivity extends Activity {
         super.onDestroy();
     }
 
+    /**
+     * Creates options menu.
+     * @param menu  options menu.
+     * @return      iff options menu inflated successfully.
+     */
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -213,6 +227,11 @@ public class CoreActivity extends Activity {
         return true;
     }
 
+    /**
+     * Action when an options item is selected.
+     * @param item  the options item selected.
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         // Handle action bar item clicks here. The action bar will
