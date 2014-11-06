@@ -1,7 +1,9 @@
 For our project, aside from meeting every Thursday in tutorial, we had weekly meetings at the laptop lounge at Bahen Center. Before each sprint, we would all meet as a team and discuss the plan for the next sprint and would decide how to split up the tasks. We used a google doc to document all matters that we discussed during the sprint meetings and how we would split up the work for the next sprint. At the beginning of the first sprint, we decided the frameworks we would use and chose to use Android, Google Cloud, TomCat, AWS, PostGreSQL for our project. At the end of each assigned sprint, we would meet up together and discuss what each member had contributed and decide what to do for the next sprint using the same process.
-After planning and delegating tasks, each group member would work on their assigned tasks during the sprint. Within each sprint, each individual group closely communicated with each other and met up frequently to work together and discuss with each other. Whenever a larger problem would arise, a member would bring up that issue to the entire group and we would brainstorm ideas to resolve the issue. For example, when we discovered an error causing our program to terminate immediately, the entire group met up to resolve the problem together. Overall, we would always plan everything out carefully, stick to the plan and meet up as a group after each sprint. In the end, we were not able to implement notifications for this phase, but have a working prototype which can store and display events.
-For this project, we did not focus as much on using the GitHub issue management system as much as we did in the exercise. We did not use it as prevalently to split up the tasks but we used it to bring up major errors. This was actually a poor decision because we found, from the exercise, that the issue system was a very effective way to organize each memberâ€™s tasks. However, after each issue was raised, although we did not use it often, the entire group would be immediately aware of the bug and we would all work to fix it, and as stated above, would strive to meet up. 
-We split the work into classes and methods, assigning groups of members to each job. However, we chose to work together as a team than have separate scrum runs due to platform issues. Many of us had trouble importing the Android project on our machines so we met up to work together.
+
+After planning and delegating tasks, each group member would work on their assigned tasks during the sprint. We split the work into classes and methods, assigning groups of members to each job. However, we chose to work together as a team rather than have separate scrum runs due to platform issues. Many of us had trouble importing the Android project on our machines so we met up to work together. So rather than meet as an entire team for scrum meetings, we would meet frequently in our smaller teams to work on the project. Whenever a larger problem would arise, a member would bring up that issue to the entire group and we would gather as a group to brainstorm ideas to resolve the issue. For example, when we discovered an error causing our program to terminate immediately, the entire group met up to resolve the problem together. Overall, we would always plan everything out carefully, stick to the plan and meet up as a group after each sprint. In the end, we were not able to implement notifications for this phase, but have a working prototype which can store and display events.
+
+For this project, we did not focus as much on using the GitHub issue management system as much as we did in the exercise. We did not use it as prevalently to split up the tasks but we used it to bring up major errors. This was actually a poor decision because we found, from the exercise, that the issue system was a very effective way to organize each member’s tasks. However, after each issue was raised, although we did not use it often, the entire group would be immediately aware of the bug and we would all work to fix it, and as stated above, would strive to meet up. 
+
 
 Full Notes (Please see if you would like to see how we planned to  split our tasks) :https://docs.google.com/document/d/1SEjOwupErPjjRO_Y1ZFOKwrBb-rUjXesonZFpRu2eZ0/edit?usp=sharing
 
@@ -50,9 +52,9 @@ Mon 4-6PM October 27, 2014
 
 Skeleton Code - Completed. Needs to be reviewed/modified by everyone.
 Database Installation/Configuration - AWS instance created, in process of installing Tomcat (will be completed today in the evening).
-Tomcat Installation Instructions - See below (also weâ€™re installing Tomcat 8, not 7) =). (http://alextheedom.wordpress.com/cloud/amazon-free-usage-tier-installing-tomcat-7-on-an-ec2-linux-instance/)
+Tomcat Installation Instructions - See below (also we’re installing Tomcat 8, not 7) =). (http://alextheedom.wordpress.com/cloud/amazon-free-usage-tier-installing-tomcat-7-on-an-ec2-linux-instance/)
 Database Design - .
-Server Registration with Google - It appears that c2dm is deprecated, gcm is used instead. They simplified everything from mobile app registration to server registration, so this shouldnâ€™t be a problem. 
+Server Registration with Google - It appears that c2dm is deprecated, gcm is used instead. They simplified everything from mobile app registration to server registration, so this shouldn’t be a problem. 
 
 2.	Matters to Discuss
 
@@ -73,6 +75,7 @@ Third Sprint Meeting - Saturday, November 1, 2014
 Third Meeting
 Saturday 2-6PM Novemer 2, 2014
 Many members had problems importing/installing the project on their machines. Most issues were solved by the end of the meeting
+
 
 
 
