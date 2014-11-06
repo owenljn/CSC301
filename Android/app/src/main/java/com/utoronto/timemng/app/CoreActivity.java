@@ -209,7 +209,14 @@ public class CoreActivity extends Activity {
         //Add info to server's DB here 
         ll.addView(eventView);
     }
-    
+
+    /*
+     *  I think the only critique that I could make is that there should be
+     *  more comments to make this easier to understand. The code itself though,
+     *  is very well done. I'm a bit rusty on dynamic creation of views/buttons, etc.
+     *  so this cleared up a lot of the questions that I had about the process. For example,
+     *  I had no idea how to specify where on a view a button should be displayed.
+     */
 	private void editPopUp(final LinearLayout popLayout, final ScrollView scrl,
 			final LinearLayout ll, final LinearLayout targEvent, final TextView nametv, final TextView datetv) {
 		
