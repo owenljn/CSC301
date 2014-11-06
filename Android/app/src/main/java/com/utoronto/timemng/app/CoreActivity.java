@@ -242,7 +242,10 @@ public class CoreActivity extends Activity {
 		final int id = item.getItemId();
 		return R.id.action_settings == id || super.onOptionsItemSelected(item);
 	}
-
+	/* CODEREVIEW: Simple, straightforward. Good comments. Explains what each .setPositive/.setNegative does
+	* and the intended use in the future (lines 70-74)
+	*
+	*/
 	// This function is a notification prototype which shows a message to user
 	private void Notify(String str) {
 		new AlertDialog.Builder(this)
