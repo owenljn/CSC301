@@ -68,7 +68,7 @@ public class CalendarGridAdapter extends BaseAdapter {
     /**
      * Creates an array of correctly ordered days for the calendar.
      */
-    public void makeCalendarArray() {
+    public final void makeCalendarArray() {
         final Calendar useMonth = (Calendar) this.pickedMonth.clone();
         useMonth.set(Calendar.DAY_OF_MONTH, 1); // Set to first day of the month.
         // To backtrack to Monday need to shift by:
