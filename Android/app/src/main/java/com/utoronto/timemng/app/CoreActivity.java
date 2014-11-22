@@ -3,6 +3,7 @@ package com.utoronto.timemng.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -45,6 +46,7 @@ public class CoreActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_core);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.context = getApplicationContext();
 
         if (checkPlayServices()) {

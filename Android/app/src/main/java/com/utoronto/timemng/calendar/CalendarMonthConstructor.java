@@ -1,12 +1,14 @@
 package com.utoronto.timemng.calendar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.utoronto.timemng.app.R;
+import com.utoronto.timemng.app.TaskListActivity;
 import com.utoronto.timemng.daytasks.EventListConstructor;
 import com.utoronto.timemng.event.DayDto;
 import com.utoronto.timemng.event.EventDto;
@@ -71,25 +73,17 @@ public class CalendarMonthConstructor {
         whichMonthString(); // Label the calendar with correct month and year.
         // Set the adapter for the GridView, so that correct calendar days are displayed.
         this.gridView.setAdapter(this.adapter);
-        // TODO: return a map of day of month to position.
         // TODO: request event list for the month from server.
-        // TODO: mark days of month that contain an event.
-        // Get the box where events will be displayed.
-        final LinearLayout eventBox = (LinearLayout) activity.findViewById(R.id.dayevents_box);
 
         // Action for when a day is clicked.
         this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                // Make the box where events will be displayed visible.
-                eventBox.setVisibility(View.VISIBLE);
-                // Convert the day of month label on the clicked cell to an integer.
-                final int dayOfMonth = Integer.parseInt(((TextView) view).getText().toString());
                 // Construct list of events.
-                // TODO: Start this as a separate activity following demo.
-                new EventListConstructor(CalendarMonthConstructor.this.activity,
-                                CalendarMonthConstructor.this.eventMap.get(dayOfMonth));
+                final Intent intent = new Intent(activity, TaskListActivity.class);
+                intent.putExtra("day", ((TextView) view).getText().toString());
+                activity.startActivity(intent);
             }
         });
     }
@@ -135,16 +129,10 @@ public class CalendarMonthConstructor {
      * @param month selected month.
      */
     public final void setMonth(final Calendar month) {
-        // Don't want to redrawn unnecessarily, so check if trying to set the same month and year.
-        if (this.selMonth.get(Calendar.YEAR) != month.get(Calendar.YEAR) &&
-                this.selMonth.get(Calendar.MONTH) != month.get(Calendar.MONTH)) {
-            this.selMonth = month;
-            // TODO: return a map of day of month to position.
-            // TODO: request updated event list for new month from server.
-            // TODO: mark days of month that contain an event.
-            refactorCalendar(); // Redraw the calendar.
-            whichMonthString(); // Set the correct month and year on label.
-        }
+        // TODO: request updated event list for new month from server.
+        refactorCalendar(); // Redraw the calendar.
+        whichMonthString(); // Set the correct month and year on label.
+        this.selMonth = month;
     }
 
     /**
@@ -189,5 +177,13 @@ public class CalendarMonthConstructor {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the map of events for the month.
+     * @return  map of events for the month
+     */
+    public Map<Integer, List<EventDto>> getEventMap() {
+        return this.eventMap;
     }
 }

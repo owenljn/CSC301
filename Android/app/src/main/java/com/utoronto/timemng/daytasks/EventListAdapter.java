@@ -34,6 +34,7 @@ public class EventListAdapter extends BaseAdapter {
      * @param events    the list of events that will be used to construct an adapter.
      */
     public EventListAdapter(final Activity activity, final List<EventDto> events) {
+        super();
         this.activity = activity;
         // If there are no events, just create an empty array list.
         // TODO: If no events, display message saying so.

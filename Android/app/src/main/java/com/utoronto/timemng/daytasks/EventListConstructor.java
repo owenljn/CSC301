@@ -16,12 +16,17 @@ public class EventListConstructor {
      */
     private static final String TAG = "c2dm event list";
 
+    /**
+     * Constructs a list of events.
+     * @param activity  activity.
+     * @param events    list of events.
+     */
     public EventListConstructor(final Activity activity, final List<EventDto> events) {
         super();
-        // Find the list view.
-        final ListView listView = (ListView) activity.findViewById(R.id.event_list);
         // Create an adapter.
         final EventListAdapter adapter = new EventListAdapter(activity, events);
+        // Find the list view.
+        final ListView listView = (ListView) activity.findViewById(R.id.event_list);
         // Set adapter.
         listView.setAdapter(adapter);
     }
