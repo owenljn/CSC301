@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,6 +33,22 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.utoronto.timemng.descriptor.Event;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import org.apache.http.*;
+import org.apache.http.message.*;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 
 public class CoreActivity extends Activity {
@@ -53,6 +70,8 @@ public class CoreActivity extends Activity {
     String SENDER_ID = "156524885885";
 
     private static final String TAG = "c2dm_app";
+
+	protected static final int TIMEOUT_MILLISEC = 0;
 
 
     @Override
@@ -116,7 +135,101 @@ public class CoreActivity extends Activity {
         	}});
         this.setContentView(scrl);
 	}
+    private class DeleteFileTask extends AsyncTask<URL, Integer, Long> {
+        protected Long doInBackground(URL... urls) {
+           ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("eventname","1980" ));
+			nameValuePairs.add(new BasicNameValuePair("des","1980"));
+			nameValuePairs.add(new BasicNameValuePair("loc","1980"));
+			nameValuePairs.add(new BasicNameValuePair("st","1980-12-12 10:20:10"));
+			nameValuePairs.add(new BasicNameValuePair("ft","1980-12-12 10:20:20"));
+			nameValuePairs.add(new BasicNameValuePair("settings","1980"));
+			//http post
+			try{
+					//System.o ut.prin tln(1/0);
+			        HttpClient httpclient = new DefaultHttpClient();
+			        HttpPost httppost = new HttpPost("http://54.85.221.124/deleteEvent.php");
+			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			        HttpResponse response = httpclient.execute(httppost);
+			        HttpEntity entity = response.getEntity();
+			        InputStream is = entity.getContent();
+			        //entity.consumeContent();
+			}catch(Exception e){
+			        Log.e("log_tag", "Error in http connection "+e.toString());
+			        return null;
+			}
+            return null;
+			//return null;
+        }
+
+       /* protected void onProgressUpdate(Integer... progress) {
+            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(Long result) {
+            showDialog("Downloaded " + result + " bytes");
+        }*/
+    }
+    private class UpdateFileTask extends AsyncTask<ArrayList<NameValuePair>, Integer, Long> {
+        protected Long doInBackground(ArrayList<NameValuePair> ... vars) {
+           ArrayList<NameValuePair> nameValuePairs = vars[0];
+			//http post
+			try{
+					//System.o ut.prin tln(1/0);
+			        HttpClient httpclient = new DefaultHttpClient();
+			        HttpPost httppost = new HttpPost("http://54.85.221.124/updateEvent.php");
+			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			        HttpResponse response = httpclient.execute(httppost);
+			        HttpEntity entity = response.getEntity();
+			        InputStream is = entity.getContent();
+			        //entity.consumeContent();
+			}catch(Exception e){
+			        Log.e("log_tag", "Error in http connection "+e.toString());
+			        return null;
+			}
+            return null;
+			//return null;
+        }
+
+       /* protected void onProgressUpdate(Integer... progress) {
+            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(Long result) {
+            showDialog("Downloaded " + result + " bytes");
+        }*/
+    }  
+    private class AddFileTask extends AsyncTask<ArrayList<NameValuePair>, Integer, Long> {
+    	protected Long doInBackground(ArrayList<NameValuePair> ... vars) {
+        	ArrayList<NameValuePair> nameValuePairs = vars[0];
+			//http post
+			try{
+					//Syste m.o ut.prin tln(1/0);
+			        HttpClient httpclient = new DefaultHttpClient();
+			        HttpPost httppost = new HttpPost("http://54.85.221.124/createEvent.php");
+			        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			        HttpResponse response = httpclient.execute(httppost);
+			        HttpEntity entity = response.getEntity();
+			        InputStream is = entity.getContent();
+			        //entity.consumeContent();
+			}catch(Exception e){
+			        Log.e("log_tag", "Error in http connection "+e.toString());
+			        return null;
+			}
+            return null;
+			//return null;
+        }
+
+       /* protected void onProgressUpdate(Integer... progress) {
+            setProgressPercent(progress[0]);
+        }
+
+        protected void onPostExecute(Long result) {
+            showDialog("Downloaded " + result + " bytes");
+        }*/
+    }
     
+
     public void addPopUp(final LinearLayout popLayout, final ScrollView scrl,final LinearLayout ll){
     	
     	//Create popup
@@ -134,8 +247,26 @@ public class CoreActivity extends Activity {
         popLayout.addView(name);
         
         final EditText date=new EditText(getApplicationContext());
-        date.setHint("date");
-        popLayout.addView(date);
+        date.setHint("start time");
+        popLayout.addView(date);        
+        
+        final EditText finish=new EditText(getApplicationContext());
+        finish.setHint("finish time");
+        popLayout.addView(finish);
+        
+        final EditText description=new EditText(getApplicationContext());
+        description.setHint("Description");
+        popLayout.addView(description);
+        
+        final EditText location =new EditText(getApplicationContext());
+        location.setHint("location");
+        popLayout.addView(location);
+        
+        final EditText settings=new EditText(getApplicationContext());
+        settings.setHint("settings ex) recurring");
+        popLayout.addView(settings);
+        
+
 
         // create add stuff here button
         final Button showStuff=new Button(getApplicationContext());
@@ -146,10 +277,32 @@ public class CoreActivity extends Activity {
         	
 			@Override
 			public void onClick(View v) {
-				addButton(popLayout,scrl,ll,name,date);
+				ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				
+        		String tvname = name.getText() + "";
+                String tvstart = date.getText() + "";
+        		String tvfinish = finish.getText() + "";
+                String tvdes = description.getText() + "";
+        		String tvloc = location.getText()+"";
+                String tvsettings = settings.getText()+"";
+                
+    			nameValuePairs.add(new BasicNameValuePair("eventname", tvname ));
+    			nameValuePairs.add(new BasicNameValuePair("des",tvdes));
+    			nameValuePairs.add(new BasicNameValuePair("loc",tvloc));
+    			nameValuePairs.add(new BasicNameValuePair("st", tvstart));
+    			nameValuePairs.add(new BasicNameValuePair("ft",tvfinish));
+    			nameValuePairs.add(new BasicNameValuePair("settings",tvsettings));
+				
+				new AddFileTask().execute(nameValuePairs);
+	
+			    
+			   
+				addButton(popLayout,scrl,ll,name,date,finish,description,location,settings);
 				pw.dismiss();
 				popLayout.removeAllViews();
-			}
+				String result = "";
+				 
+				}
 
         });
         
@@ -168,11 +321,14 @@ public class CoreActivity extends Activity {
         });
     }
     
-    private void addButton(final LinearLayout popLayout, final ScrollView scrl,final LinearLayout ll,EditText name, EditText date){
-		// Dynamically add stuff here
+    private void addButton(final LinearLayout popLayout, final ScrollView scrl,final LinearLayout ll,EditText name, EditText date, EditText finish, EditText description, EditText location, EditText settings){
+		//if (popLayout.getChildAt(0).equals(name))
+			//System.out.println(1/0);
+    	
+    	// Dynamically add stuff here
 		final LinearLayout eventView = new LinearLayout(getApplicationContext());
 		eventView.setMinimumWidth(ll.getWidth());
-		eventView.setOrientation(LinearLayout.HORIZONTAL);
+		eventView.setOrientation(LinearLayout.VERTICAL);
 		
         final TextView nametv=new TextView(getApplicationContext());
         nametv.setText("Event: "+ name.getText());
@@ -185,11 +341,34 @@ public class CoreActivity extends Activity {
         datetv.setTextColor(Color.RED);
         eventView.addView(datetv);
         
+    	final TextView finishtv=new TextView(getApplicationContext());
+        finishtv.setText(" Finish:  " + finish.getText());
+        finishtv.setTextColor(Color.RED);
+        eventView.addView(finishtv);
+        
+    	final TextView destv=new TextView(getApplicationContext());
+        destv.setText(" Description: " + description.getText());
+        destv.setTextColor(Color.RED);
+        eventView.addView(destv);
+        
+    	final TextView loctv=new TextView(getApplicationContext());
+    	
+        loctv.setText(" Location: " + location.getText());
+        loctv.setTextColor(Color.RED);
+        eventView.addView(loctv);
+
+    	final TextView settv=new TextView(getApplicationContext());
+        settv.setText(" Settings: " + settings.getText());
+        settv.setTextColor(Color.RED);
+        eventView.addView(settv);
+        
         final Button deleteStuff=new Button(getApplicationContext());
         deleteStuff.setText("Delete");
         deleteStuff.setOnClickListener(new OnClickListener(){
         	
+
         	public void onClick(View v){
+				new DeleteFileTask().execute();
         		eventView.removeAllViews();
         	}
         	
@@ -200,7 +379,8 @@ public class CoreActivity extends Activity {
         	
         	public void onClick(View v){
         		
-        		editPopUp(popLayout,scrl,ll,eventView, nametv, datetv);
+
+        		editPopUp(popLayout,scrl,ll,eventView, nametv, datetv,finishtv,destv,loctv,settv );
         	}
         	
         });
@@ -211,7 +391,7 @@ public class CoreActivity extends Activity {
     }
     
 	private void editPopUp(final LinearLayout popLayout, final ScrollView scrl,
-			final LinearLayout ll, final LinearLayout targEvent, final TextView nametv, final TextView datetv) {
+			final LinearLayout ll, final LinearLayout targEvent, final TextView nametv, final TextView datetv, final TextView finishtv, final TextView destv, final TextView loctv, final TextView settv) {
 		
 		//Create popup
         final PopupWindow pw = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -224,6 +404,10 @@ public class CoreActivity extends Activity {
         View contentView = pw.getContentView();
         String tvname = ((String) nametv.getText()).substring(7);
         String tvdate = ((String) datetv.getText()).substring(10);
+        String tvfinish = ((String) finishtv.getText()).substring(7);
+        String tvdes = ((String) destv.getText()).substring(10);
+        String tvloc = ((String) loctv.getText()).substring(7);
+        String tvset = ((String) settv.getText()).substring(10);
         
         
         final EditText name=new EditText(getApplicationContext());
@@ -234,6 +418,22 @@ public class CoreActivity extends Activity {
         date.setText(tvdate);
         popLayout.addView(date);
 
+        final EditText ft=new EditText(getApplicationContext());
+        ft.setText(tvfinish);
+        popLayout.addView(ft);
+
+        final EditText des=new EditText(getApplicationContext());
+        des.setText(tvdes);
+        popLayout.addView(des);
+        
+        final EditText loc=new EditText(getApplicationContext());
+        loc.setText(tvfinish);
+        popLayout.addView(loc);
+        
+        final EditText settings=new EditText(getApplicationContext());
+        settings.setText(tvset);
+        popLayout.addView(settings);
+        
         // create add stuff here button
         final Button showStuff=new Button(getApplicationContext());
         showStuff.setText("Update");
@@ -243,9 +443,36 @@ public class CoreActivity extends Activity {
         	
 			@Override
 			public void onClick(View v) {
+	       		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+    			
 				//addButton(popLayout,scrl,ll,name,date);
-				datetv.setText(" At Date: " + date.getText());
+				datetv.setText("Start on: " + date.getText());
 				nametv.setText("Event: " + name.getText());
+				finishtv.setText("Finish on: " + ft.getText());
+				destv.setText("Desciption: " + des.getText());
+				loctv.setText("Location: " + loc.getText());
+				settv.setText("Settings: " + settings.getText());
+				
+				
+        		String tvname = ((String) nametv.getText()).substring(7);
+                String tvstart = ((String) datetv.getText()).substring(10);
+        		String tvfinish = ((String) finishtv.getText());
+                String tvdes = ((String) destv.getText());
+        		String tvloc = ((String) loctv.getText());
+                String tvsettings = ((String) settv.getText());
+                
+
+    			nameValuePairs.add(new BasicNameValuePair("eventname", tvname ));
+			
+    			nameValuePairs.add(new BasicNameValuePair("des",tvdes));
+    			nameValuePairs.add(new BasicNameValuePair("loc",tvloc));    			
+    			nameValuePairs.add(new BasicNameValuePair("st", tvstart));
+    			nameValuePairs.add(new BasicNameValuePair("ft",tvfinish));    
+    			nameValuePairs.add(new BasicNameValuePair("settings",tvsettings));
+    			
+				new UpdateFileTask().execute(nameValuePairs);
+    			
 				pw.dismiss();
 				popLayout.removeAllViews();
 			}
