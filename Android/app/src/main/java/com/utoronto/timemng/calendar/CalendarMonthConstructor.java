@@ -136,9 +136,39 @@ public class CalendarMonthConstructor {
      */
     public final void setMonth(final Calendar month) {
         // TODO: request updated event list for new month from server.
+        this.selMonth = month;
         refactorCalendar(); // Redraw the calendar.
         whichMonthString(); // Set the correct month and year on label.
-        this.selMonth = month;
+    }
+
+    /**
+     * Sets the month to the next month.
+     */
+    public final void setNextMonth() {
+        // TODO: request updated event list for new month from server.
+        this.selMonth.add(Calendar.MONTH, 1);
+        refactorCalendar();
+        whichMonthString();
+    }
+
+    /**
+     * Sets the month to the previous month.
+     */
+    public final void setPrevMonth() {
+        // TODO: request updated list for new month from server.
+        this.selMonth.add(Calendar.MONTH, -1);
+        refactorCalendar();
+        whichMonthString();
+    }
+
+    /**
+     * Sets the month to this month.
+     */
+    public void setToday() {
+        // TODO: request updated list for new month from server.
+        this.selMonth = Calendar.getInstance();
+        refactorCalendar();
+        whichMonthString();
     }
 
     /**
@@ -154,7 +184,9 @@ public class CalendarMonthConstructor {
      * month is selected.
      */
     private void refactorCalendar() {
+        this.adapter.setMonth(this.selMonth);
         this.adapter.makeCalendarArray();
+        this.adapter.notifyDataSetChanged();
     }
 
     /**

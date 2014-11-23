@@ -32,6 +32,7 @@ public class CoreActivity extends Activity {
     GoogleCloudMessaging gcm;
     String regid;
     Context context;
+    private CalendarMonthConstructor calMnthConstr;
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -67,7 +68,7 @@ public class CoreActivity extends Activity {
             // Prior to creating the first instance of the class, define the activity that will be used.
             CalendarMonthConstructor.defineActivity(this);
             // Get an instance of the calendar (only one instance of it since singleton pattern was used).
-            CalendarMonthConstructor.getInstance();
+            this.calMnthConstr = CalendarMonthConstructor.getInstance();
         }
         // TODO: could add some layout actions here
     }
@@ -225,11 +226,16 @@ public class CoreActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         final int id = item.getItemId();
         switch (item.getItemId()) {
-            case R.id.action_prev:
+            case R.id.core_action_prev:
+                this.calMnthConstr.setPrevMonth();
                 return true;
-            case R.id.action_next:
+            case R.id.core_action_today:
+                this.calMnthConstr.setToday();
                 return true;
-            case R.id.action_refresh:
+            case R.id.core_action_next:
+                this.calMnthConstr.setNextMonth();
+                return true;
+            case R.id.core_action_refresh:
                 return true;
             case R.id.action_settings:
                 return true;

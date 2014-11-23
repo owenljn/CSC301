@@ -24,4 +24,5 @@
     <string name="submit_button">Submit</string>
     <string name="done_button">Done</string>
     <string name="refresh_button">Refresh</string>
+    <string name="action_today">Today</string>
 </resources>
