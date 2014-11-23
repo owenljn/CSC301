@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.*;
 import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.app.TaskListActivity;
-import com.utoronto.timemng.daytasks.EventListConstructor;
 import com.utoronto.timemng.event.DayDto;
 import com.utoronto.timemng.event.EventDto;
 
@@ -84,11 +83,8 @@ public class CalendarMonthConstructor {
                 final Intent intent = new Intent(activity, TaskListActivity.class);
                 intent.putExtra("day", day);
                 intent.putExtra("month", String.valueOf(clonedCalendar.get(Calendar.MONTH)));
-//                intent.putExtra("month", DateFormat.format("MMMM", CalendarMonthConstructor.this.selMonth).toString());
                 intent.putExtra("year", String.valueOf(clonedCalendar.get(Calendar.YEAR)));
-//                intent.putExtra("year", DateFormat.format("yyyy", CalendarMonthConstructor.this.selMonth).toString());
                 intent.putExtra("weekday", String.valueOf(clonedCalendar.get(Calendar.DAY_OF_WEEK)));
-//                intent.putExtra("weekday", DateFormat.format("EEEE", clonedCalendar).toString());
                 activity.startActivity(intent);
             }
         });
