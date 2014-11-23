@@ -33,7 +33,11 @@
                 android:label="@string/app_name"
                 android:parentActivityName="com.utoronto.timemng.app.CoreActivity">
         </activity>
-
+        <activity android:name="com.utoronto.timemng.app.NewEventActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:label="TM"
+                  android:parentActivityName="com.utoronto.timemng.app.TaskListActivity">
+        </activity>
         <receiver
                 android:name="com.utoronto.timemng.gcm.GcmBroadcastReceiver"
                 android:permission="com.google.android.c2dm.permission.SEND">

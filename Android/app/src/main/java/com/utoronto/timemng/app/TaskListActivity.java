@@ -10,13 +10,14 @@ import android.view.MenuItem;
 import com.utoronto.timemng.calendar.CalendarMonthConstructor;
 import com.utoronto.timemng.daytasks.EventListConstructor;
 
-import java.util.Calendar;
-
 /**
  * An activity containing the list of events for the selected day.
  */
 public class TaskListActivity extends Activity {
     private EventListConstructor taskList;
+    private int dayOfMonth;
+    private int year;
+    private int month;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -26,13 +27,13 @@ public class TaskListActivity extends Activity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final Intent intent = getIntent();
         // Get the day that this activity is constructed for.
-        final int dayOfMonth = Integer.parseInt(intent.getStringExtra("day"));
-        final int year = Integer.parseInt(intent.getStringExtra("year"));
-        final int month = Integer.parseInt(intent.getStringExtra("month"));
+        this.dayOfMonth = Integer.parseInt(intent.getStringExtra("day"));
+        this.year = Integer.parseInt(intent.getStringExtra("year"));
+        this.month = Integer.parseInt(intent.getStringExtra("month"));
         final CalendarMonthConstructor calendarMonthConstructor = CalendarMonthConstructor.getInstance();
         // Construct the task list.
         this.taskList = new EventListConstructor(this, calendarMonthConstructor.getEventMap()
-                .get(dayOfMonth), year, month, dayOfMonth);
+                .get(this.dayOfMonth), this.year, this.month, this.dayOfMonth);
     }
 
     @Override
@@ -49,8 +50,11 @@ public class TaskListActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_new:
+                addEventActivity();
                 return true;
             case R.id.action_prev:
+                return true;
+            case R.id.action_today:
                 return true;
             case R.id.action_next:
                 return true;
@@ -58,11 +62,17 @@ public class TaskListActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
-//
-//    private Calendar createCalendarObject() {
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.set(Calendar.YEAR, ())
-//    }
+
+    /**
+     * Starts an activity for adding a new event.
+     */
+    private void addEventActivity() {
+        final Intent intent = new Intent(this, NewEventActivity.class);
+        intent.putExtra("day", String.valueOf(this.dayOfMonth));
+        intent.putExtra("year", String.valueOf(this.year));
+        intent.putExtra("month", String.valueOf(this.month));
+        this.startActivity(intent);
+    }
 
     @Override
     protected void onRestart() {

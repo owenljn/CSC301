@@ -12,7 +12,7 @@
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
-    <string name="add_button">+</string>
+    <string name="add_button">Create</string>
     <string name="remove_button">-</string>
     <string name="prev_button">Previous</string>
     <string name="next_button">Next</string>
@@ -25,4 +25,11 @@
     <string name="done_button">Done</string>
     <string name="refresh_button">Refresh</string>
     <string name="action_today">Today</string>
+    <string name="event_title">Enter title of event</string>
+    <string name="all_day">All Day</string>
+    <string name="event_location">Add location</string>
+    <string name="event_people">Invite people</string>
+    <string name="event_note">Add note</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
 </resources>
