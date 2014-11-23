@@ -13,10 +13,7 @@ import com.utoronto.timemng.daytasks.EventListConstructor;
 import com.utoronto.timemng.event.DayDto;
 import com.utoronto.timemng.event.EventDto;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Constructs the calendar for the month. Creates the calendar for the current month by default.
@@ -26,14 +23,14 @@ import java.util.Map;
 public class CalendarMonthConstructor {
 
     /**
-     * Carried over from CoreActivity.
-     */
-    private static Activity activity;
-
-    /**
      * Tag for logging purposes.
      */
     private static final String TAG = "c2dm calendar";
+
+    /**
+     * Carried over from CoreActivity.
+     */
+    private static Activity activity;
 
     /**
      * Month selected by user. When class is first instantiated, it will be set to current month.
@@ -80,9 +77,18 @@ public class CalendarMonthConstructor {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                final Calendar clonedCalendar = (Calendar) CalendarMonthConstructor.this.selMonth.clone();
+                final String day = ((TextView) view).getText().toString();
+                clonedCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
                 // Construct list of events.
                 final Intent intent = new Intent(activity, TaskListActivity.class);
-                intent.putExtra("day", ((TextView) view).getText().toString());
+                intent.putExtra("day", day);
+                intent.putExtra("month", String.valueOf(clonedCalendar.get(Calendar.MONTH)));
+//                intent.putExtra("month", DateFormat.format("MMMM", CalendarMonthConstructor.this.selMonth).toString());
+                intent.putExtra("year", String.valueOf(clonedCalendar.get(Calendar.YEAR)));
+//                intent.putExtra("year", DateFormat.format("yyyy", CalendarMonthConstructor.this.selMonth).toString());
+                intent.putExtra("weekday", String.valueOf(clonedCalendar.get(Calendar.DAY_OF_WEEK)));
+//                intent.putExtra("weekday", DateFormat.format("EEEE", clonedCalendar).toString());
                 activity.startActivity(intent);
             }
         });

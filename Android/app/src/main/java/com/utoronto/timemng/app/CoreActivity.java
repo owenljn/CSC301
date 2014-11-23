@@ -224,6 +224,17 @@ public class CoreActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         final int id = item.getItemId();
-        return R.id.action_settings == id || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_prev:
+                return true;
+            case R.id.action_next:
+                return true;
+            case R.id.action_refresh:
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

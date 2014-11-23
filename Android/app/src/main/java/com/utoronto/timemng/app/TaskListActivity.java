@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import com.utoronto.timemng.calendar.CalendarMonthConstructor;
 import com.utoronto.timemng.daytasks.EventListConstructor;
 
+import java.util.Calendar;
+
 /**
  * An activity containing the list of events for the selected day.
  */
 public class TaskListActivity extends Activity {
+    private EventListConstructor taskList;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +27,12 @@ public class TaskListActivity extends Activity {
         final Intent intent = getIntent();
         // Get the day that this activity is constructed for.
         final int dayOfMonth = Integer.parseInt(intent.getStringExtra("day"));
+        final int year = Integer.parseInt(intent.getStringExtra("year"));
+        final int month = Integer.parseInt(intent.getStringExtra("month"));
         final CalendarMonthConstructor calendarMonthConstructor = CalendarMonthConstructor.getInstance();
         // Construct the task list.
-        new EventListConstructor(this, calendarMonthConstructor.getEventMap().get(dayOfMonth));
+        this.taskList = new EventListConstructor(this, calendarMonthConstructor.getEventMap()
+                .get(dayOfMonth), year, month, dayOfMonth);
     }
 
     @Override
@@ -40,9 +47,22 @@ public class TaskListActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        final int id = item.getItemId();
-        return R.id.action_new == id || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_new:
+                return true;
+            case R.id.action_prev:
+                return true;
+            case R.id.action_next:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+//
+//    private Calendar createCalendarObject() {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.YEAR, ())
+//    }
 
     @Override
     protected void onRestart() {
