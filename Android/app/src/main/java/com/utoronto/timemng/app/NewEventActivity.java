@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import com.utoronto.timemng.event.EventDto;
 
@@ -59,10 +60,24 @@ public class NewEventActivity extends Activity {
 
     /**
      * The start date view is clicked.
-     * @param view  the view that was clicked.
+     * @param myView  the view that was clicked.
      */
-    public void onStartDateClicked(final View view) {
-        final DialogFragment newFragment = new DatePickerFragment();
+    public void onStartDateClicked(final View myView) {
+        final Calendar calendar = Calendar.getInstance();
+        final TextView endDate = (TextView) this.findViewById(R.id.end_date);
+        final DialogFragment newFragment = new DatePickerFragment() {
+            @Override
+            public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                final String weekDay = DateFormat.format("EEEE", calendar).toString();
+                final String monthStr = DateFormat.format("MMM", calendar).toString();
+                final String dateStr = weekDay + ", " + dayOfMonth + " " + monthStr + " " + year;
+                ((TextView) myView).setText(dateStr);
+                endDate.setText(dateStr);
+            }
+        };
         newFragment.show(getFragmentManager(), "startDatePicker");
     }
 
