@@ -127,17 +127,6 @@ public class CalendarMonthConstructor {
     }
 
     /**
-     * Sets a different month. This requires the calendar to be redrawn.
-     * @param month selected month.
-     */
-    public final void setMonth(final Calendar month) {
-        // TODO: request updated event list for new month from server.
-        this.selMonth = month;
-        refactorCalendar(); // Redraw the calendar.
-        whichMonthString(); // Set the correct month and year on label.
-    }
-
-    /**
      * Sets the month to the next month.
      */
     public final void setNextMonth() {
