@@ -1,6 +1,8 @@
 package com.utoronto.timemng.daytasks;
 
 import android.app.Activity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.event.EventDto;
@@ -29,5 +31,13 @@ public class EventListConstructor {
         final ListView listView = (ListView) activity.findViewById(R.id.event_list);
         // Set adapter.
         listView.setAdapter(adapter);
+        // Set a click listener.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
+
+            }
+        });
     }
 }

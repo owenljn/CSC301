@@ -5,10 +5,23 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:background="@drawable/customborder">
+              android:background="@drawable/customborder"
+              android:padding="6dp">
+    <LinearLayout android:id="@+id/date_panel"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content">
+        <TextView android:id="@+id/date_text"
+                  android:text="@string/which_month"
+                  android:textAllCaps="true"
+                  android:textStyle="bold"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"/>
+    </LinearLayout>
     <ListView android:id="@+id/event_list"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_height="fill_parent"
+              android:dividerHeight="5dp">
     </ListView>
 
 </LinearLayout>

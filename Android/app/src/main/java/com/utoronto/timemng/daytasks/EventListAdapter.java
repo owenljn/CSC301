@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.event.EventDto;
@@ -85,17 +86,36 @@ public class EventListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
-        final TextView textView;
+        final TextView title;
+        final TextView time;
+        final TextView address;
         final EventDto event = this.events.get(position); // Get the event that will be stored in this row.
         final long eventId = event.getEventId(); // Get the unique event id.
         // Layout hasn't been inflated yet because this is the first row that is being looked at.
         if (null == row) {
-            row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.list_item, parent, false);
+            row = LayoutInflater.from(this.activity.getApplicationContext()).inflate(R.layout.task_item, parent, false);
         }
 
-        textView = (TextView) row.findViewById(R.id.list_item); // Get the TextView that will be applied.
-        textView.setTextColor(Color.BLACK); // Want the colour of the text to be black.
-        textView.setText(event.getEventTitle()); // Set the event title.
+        title = (TextView) row.findViewById(R.id.event_title);
+        title.setTextColor(Color.BLACK); // Want title colour to be black.
+        title.setText(event.getEventTitle()); // Set title.
+
+        if (!event.isAllDay()) {
+            time = (TextView) row.findViewById(R.id.event_time);
+            time.setTextColor(Color.BLACK);
+            time.setText(event.getStartTime().substring(0, 5) + " - " + event.getEndTime().substring(0, 5));
+        }
+
+        address = (TextView) row.findViewById(R.id.event_location);
+        if (null != event.getLocation()) {
+            address.setTextColor(Color.GRAY);
+            address.setText(event.getLocation());
+            address.setVisibility(View.VISIBLE);
+        } else {
+            address.setVisibility(View.GONE); // The view is reused, so need to adjust for each case.
+        }
+
+        row.setBackgroundColor(Color.parseColor("#C2DFFF"));
         row.setTag(eventId); // Tag the row with the event id.
         return row;
     }
