@@ -20,9 +20,13 @@ public class NewEventActivity extends Activity {
     private static final String TAG = "c2dm add event";
     private boolean isAllDay = false;
     private String eventTitle;
-    private String startDateVar;
-    private String endDateVar;
+    private String startYearVar;
+    private String startMonthVar;
+    private String startDayVar;
     private String startTimeVar;
+    private String endYearVar;
+    private String endMonthVar;
+    private String endDayVar;
     private String endTimeVar;
     private String location;
     private String invitees;
@@ -83,6 +87,13 @@ public class NewEventActivity extends Activity {
                 final String dateStr = weekDay + ", " + dayOfMonth + " " + monthStr + " " + year;
                 ((TextView) myView).setText(dateStr);
                 endDate.setText(dateStr);
+
+                NewEventActivity.this.startYearVar = String.valueOf(year);
+                NewEventActivity.this.startMonthVar = String.valueOf(monthOfYear);
+                NewEventActivity.this.startDayVar = String.valueOf(dayOfMonth);
+                NewEventActivity.this.endYearVar = NewEventActivity.this.startYearVar;
+                NewEventActivity.this.endMonthVar = NewEventActivity.this.startMonthVar;
+                NewEventActivity.this.endDayVar = NewEventActivity.this.startDayVar;
             }
         };
         newFragment.show(getFragmentManager(), "startDatePicker");
@@ -124,6 +135,9 @@ public class NewEventActivity extends Activity {
                 final String monthStr = DateFormat.format("MMM", NewEventActivity.this.calendar).toString();
                 final String dateStr = weekDay + ", " + dayOfMonth + " " + monthStr + " " + year;
                 ((TextView) myView).setText(dateStr);
+                NewEventActivity.this.endYearVar = String.valueOf(year);
+                NewEventActivity.this.endMonthVar = String.valueOf(monthOfYear);
+                NewEventActivity.this.endDayVar = String.valueOf(dayOfMonth);
             }
         };
         newFragment.show(getFragmentManager(), "endDatePicker");
@@ -164,15 +178,11 @@ public class NewEventActivity extends Activity {
         final EditText titleView = (EditText) this.findViewById(R.id.event_title_input);
         this.eventTitle = titleView.getText().toString();
         if (null != this.eventTitle) {
-            final TextView startDateView = (TextView) this.findViewById(R.id.start_date);
-            final TextView endDateView = (TextView) this.findViewById(R.id.end_date);
             final TextView startTimeView = (TextView) this.findViewById(R.id.event_start_time);
             final TextView endTimeView = (TextView) this.findViewById(R.id.event_end_time);
             final EditText locationView = (EditText) this.findViewById(R.id.event_location_input);
             final EditText inviteesView = (EditText) this.findViewById(R.id.event_add_ppl_input);
             final EditText noteView = (EditText) this.findViewById(R.id.event_note_input);
-            this.startDateVar = startDateView.getText().toString();
-            this.endDateVar = endDateView.getText().toString();
             this.startTimeVar = startTimeView.getText().toString();
             this.endTimeVar = endTimeView.getText().toString();
             this.location = locationView.getText().toString();
@@ -180,14 +190,21 @@ public class NewEventActivity extends Activity {
             this.note = noteView.getText().toString();
             Log.i(TAG, "is all day: " + Boolean.toString(this.isAllDay));
             Log.i(TAG, "title: " + this.eventTitle);
-            Log.i(TAG, "start date: " + this.startDateVar);
-            Log.i(TAG, "end date: " + this.endDateVar);
+            Log.i(TAG, "start year: " + this.startYearVar);
+            Log.i(TAG, "start month: " + this.startMonthVar);
+            Log.i(TAG, "start day: " + this.startDayVar);
             Log.i(TAG, "start time: " + this.startTimeVar);
+            Log.i(TAG, "finish year: " + this.endYearVar);
+            Log.i(TAG, "finish month: " + this.endMonthVar);
+            Log.i(TAG, "finish day: " + this.endDayVar);
             Log.i(TAG, "end time: " + this.endTimeVar);
             Log.i(TAG, "location: " + this.location);
             Log.i(TAG, "invitees: " + this.invitees);
             Log.i(TAG, "note: " + this.note);
-            ServerHelper.sentToServer();
+            ServerHelper.sendToServer(this.eventTitle, this.note, this.location,
+                    this.startYearVar, this.startMonthVar, this.startDayVar,
+                    this.startTimeVar, this.endYearVar, this.endMonthVar,
+                    this.endDayVar, this.endTimeVar, Boolean.toString(this.isAllDay));
         } else {
             // TODO: pop up saying there's an error.
         }
@@ -204,13 +221,13 @@ public class NewEventActivity extends Activity {
         this.calendar.set(Calendar.DAY_OF_MONTH, day);
         this.calendar.set(Calendar.MONTH, month);
         this.calendar.set(Calendar.YEAR, year);
-        final CharSequence beginTime = DateFormat.format("HH:" + "00", this.calendar).toString();
+        this.startTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString();
         this.calendar.add(Calendar.HOUR, 1);
-        final CharSequence finishTime = DateFormat.format("HH:" + "00", this.calendar).toString();
-        final CharSequence monthStr = DateFormat.format("MMM", this.calendar).toString();
-        final CharSequence dayStr = DateFormat.format("dd", this.calendar).toString();
-        final CharSequence weekDay = DateFormat.format("EEEE", this.calendar).toString();
-        final CharSequence yearStr = DateFormat.format("yyyy", this.calendar).toString();
+        this.endTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString();
+        final String monthStr = DateFormat.format("MMM", this.calendar).toString();
+        final String dayStr = DateFormat.format("dd", this.calendar).toString();
+        final String weekDay = DateFormat.format("EEEE", this.calendar).toString();
+        final String yearStr = DateFormat.format("yyyy", this.calendar).toString();
         final String dateString = String.format("%s, %s %s %s", weekDay, dayStr, monthStr, yearStr);
         final TextView startDate = (TextView) this.findViewById(R.id.start_date);
         final TextView startTime = (TextView) this.findViewById(R.id.event_start_time);
@@ -218,7 +235,13 @@ public class NewEventActivity extends Activity {
         final TextView endTime = (TextView) this.findViewById(R.id.event_end_time);
         startDate.setText(dateString);
         endDate.setText(dateString);
-        startTime.setText(beginTime);
-        endTime.setText(finishTime);
+        startTime.setText(this.startTimeVar);
+        endTime.setText(this.endTimeVar);
+        this.startYearVar = String.valueOf(year);
+        this.startMonthVar = String.valueOf(month);
+        this.startDayVar = String.valueOf(day);
+        this.endYearVar = this.startYearVar;
+        this.endMonthVar = this.startMonthVar;
+        this.endDayVar = this.startDayVar;
     }
 }

@@ -1,10 +1,14 @@
 package com.utoronto.timemng.calendar;
 import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utoronto.timemng.event.DayDto;
+import com.utoronto.timemng.event.EventDto;
 import com.utoronto.timemng.event.PayloadContainerDto;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
