@@ -72,20 +72,16 @@ while($e=mysql_fetch_assoc($result)) {
 		$JSONpayload ="\"data\":{\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
 }
 $JSONpayload = $JSONpayload.$JSONevents."]}\"";
-$registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
+//$registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
 
 function EncodeJSON($JSONpayload,$registrationId) {
 	$result = "{\"registration_ids\" :[".$registrationId."],".$JSONpayload;
 	return $result;
 }
 
-function sendNotification( $apiKey, $registrationIdsArray, $messageData )
+/* function sendNotification( $apiKey, $registrationIdsArray, $messageData )
 {   
     $headers = array("Content-Type:" . "application/json", "Authorization:" . "key=" . $apiKey);
-    $data = array(
-        'data' => $messageData,
-        'registration_ids' => $registrationIdsArray
-    );
  
     $ch = curl_init();
  
@@ -95,30 +91,63 @@ function sendNotification( $apiKey, $registrationIdsArray, $messageData )
     curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0 );
 	
     curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+//    curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+    curl_setopt( $ch, CURLOPT_POSTFIELDS, $messagedata );
  
     $response = curl_exec($ch);
     curl_close($ch);
  
     return $response;
-}
+} */
 // Message to send
-$message      = "the test message";
+/* $message      = "the test message";
 $tickerText   = "ticker text message";
 $contentTitle = "content title";
-$contentText  = "content body";
+$contentText  = "content body"; */
  
 $registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
 $apiKey = "AIzaSyA82yCJnslrBvS7RQqr0VwBTtRZ0GPryqQ";
-
+/* 
 $response = sendNotification( 
                 $apiKey, 
                 array($registrationId), 
                 //EncodeJSON($JSONpayload,$registrationId));
-				array('message' => $message, 'tickerText' => $tickerText, 'contentTitle' => $contentTitle, "contentText" => $contentText));
+				array('message' => $message, 'tickerText' => $tickerText, 'contentTitle' => $contentTitle, "contentText" => $contentText)); */
 /*  $file = 'newfile.txt';
  file_put_contents($file, $response);
 echo $response; */
 
+
+// Now the GCM part
+$url = 'https://android.googleapis.com/gcm/send';
+
+/* $fields = array(
+                'registration_ids'  => array($_POST['registrationIDs']),
+                'data'              => array( "message" => $message ),
+                ); */
+$fileds = EncodeJSON($JSONpayload,$registrationId); 
+$headers = array( 
+                    'Authorization: key=' . $apiKey],
+                    'Content-Type: application/json'
+                );
+
+// Open connection
+$ch = curl_init();
+
+// Set the url, number of POST vars, POST data
+curl_setopt( $ch, CURLOPT_URL, $url );
+
+curl_setopt( $ch, CURLOPT_POST, true );
+curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+/* 
+curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) ); */
+curl_setopt( $ch, CURLOPT_POSTFIELDS, $fields );
+
+// Execute post
+$response = curl_exec($ch);
+
+// Close connection
+curl_close($ch);
 mysql_close($conn);
 ?>
