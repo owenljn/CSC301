@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.utoronto.timemng.app.constants.Constants;
 import com.utoronto.timemng.calendar.CalendarMonthConstructor;
 import com.utoronto.timemng.daytasks.EventListConstructor;
 
@@ -71,8 +72,20 @@ public class TaskListActivity extends Activity {
         intent.putExtra("day", String.valueOf(this.dayOfMonth));
         intent.putExtra("year", String.valueOf(this.year));
         intent.putExtra("month", String.valueOf(this.month));
-        this.startActivity(intent);
+        this.startActivityForResult(intent, Constants.REQUEST_EXIT);
     }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (Constants.REQUEST_EXIT == requestCode) {
+            this.finish();
+        }
+    }
+
+    /**
+     *
+     */
 
     @Override
     protected void onRestart() {

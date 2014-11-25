@@ -1,7 +1,10 @@
 package com.utoronto.timemng.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.utoronto.timemng.app.constants.Constants;
 import com.utoronto.timemng.server.ServerHelper;
 
 import java.util.Calendar;
@@ -31,7 +35,8 @@ public class NewEventActivity extends Activity {
     private String location;
     private String invitees;
     private String note;
-    private Calendar calendar = Calendar.getInstance();
+
+    private final Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class NewEventActivity extends Activity {
             this.isAllDay = true;
             startTime.setVisibility(View.INVISIBLE);
             endTime.setVisibility(View.INVISIBLE);
-        } else {
+        } else { // Need to set visible again in case someone changes their mind and unchecks box.
             this.isAllDay = false;
             startTime.setVisibility(View.VISIBLE);
             endTime.setVisibility(View.VISIBLE);
@@ -71,29 +76,23 @@ public class NewEventActivity extends Activity {
     }
 
     /**
-     * The start date view is clicked.
+     * The start date view is clicked. Initialise date picker pop up.
      * @param myView  the view that was clicked.
      */
     public void onStartDateClicked(final View myView) {
-        final TextView endDate = (TextView) this.findViewById(R.id.end_date);
+        final TextView endDate = (TextView) this.findViewById(R.id.end_date); // Need to change end date as well.
         final DialogFragment newFragment = new DatePickerFragment() {
             @Override
             public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                NewEventActivity.this.calendar.set(Calendar.YEAR, year);
-                NewEventActivity.this.calendar.set(Calendar.MONTH, monthOfYear);
-                NewEventActivity.this.calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setCalendarDate(year, monthOfYear, dayOfMonth);
                 final String weekDay = DateFormat.format("EEEE", NewEventActivity.this.calendar).toString();
                 final String monthStr = DateFormat.format("MMM", NewEventActivity.this.calendar).toString();
-                final String dateStr = weekDay + ", " + dayOfMonth + " " + monthStr + " " + year;
+                final String dateStr = generateDateString(weekDay, String.valueOf(dayOfMonth), monthStr,
+                        String.valueOf(year));
                 ((TextView) myView).setText(dateStr);
                 endDate.setText(dateStr);
 
-                NewEventActivity.this.startYearVar = String.valueOf(year);
-                NewEventActivity.this.startMonthVar = String.valueOf(monthOfYear);
-                NewEventActivity.this.startDayVar = String.valueOf(dayOfMonth);
-                NewEventActivity.this.endYearVar = NewEventActivity.this.startYearVar;
-                NewEventActivity.this.endMonthVar = NewEventActivity.this.startMonthVar;
-                NewEventActivity.this.endDayVar = NewEventActivity.this.startDayVar;
+                setBothDateVars(String.valueOf(year), String.valueOf(monthOfYear), String.valueOf(dayOfMonth));
             }
         };
         newFragment.show(getFragmentManager(), "startDatePicker");
@@ -108,8 +107,7 @@ public class NewEventActivity extends Activity {
         final DialogFragment newFragment = new TimePickerFragment() {
             @Override
             public void onTimeSet(final TimePicker view, final int hourOfDay, final int minute) {
-                NewEventActivity.this.calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                NewEventActivity.this.calendar.set(Calendar.MINUTE, minute);
+                setCalendarTime(hourOfDay, minute);
                 final String timeStrStart = DateFormat.format("HH:mm", NewEventActivity.this.calendar).toString();
                 NewEventActivity.this.calendar.add(Calendar.HOUR_OF_DAY, 1);
                 final String timeStrEnd = DateFormat.format("HH:mm", NewEventActivity.this.calendar).toString();
@@ -128,16 +126,13 @@ public class NewEventActivity extends Activity {
         final DialogFragment newFragment = new DatePickerFragment() {
             @Override
             public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
-                NewEventActivity.this.calendar.set(Calendar.YEAR, year);
-                NewEventActivity.this.calendar.set(Calendar.MONTH, monthOfYear);
-                NewEventActivity.this.calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setCalendarDate(year, monthOfYear, dayOfMonth);
                 final String weekDay = DateFormat.format("EEEE", NewEventActivity.this.calendar).toString();
                 final String monthStr = DateFormat.format("MMM", NewEventActivity.this.calendar).toString();
-                final String dateStr = weekDay + ", " + dayOfMonth + " " + monthStr + " " + year;
+                final String dateStr = generateDateString(weekDay, String.valueOf(dayOfMonth), monthStr,
+                        String.valueOf(year));
                 ((TextView) myView).setText(dateStr);
-                NewEventActivity.this.endYearVar = String.valueOf(year);
-                NewEventActivity.this.endMonthVar = String.valueOf(monthOfYear);
-                NewEventActivity.this.endDayVar = String.valueOf(dayOfMonth);
+                setEndDateVars(String.valueOf(year), String.valueOf(monthOfYear), String.valueOf(dayOfMonth));
             }
         };
         newFragment.show(getFragmentManager(), "endDatePicker");
@@ -151,8 +146,7 @@ public class NewEventActivity extends Activity {
         final DialogFragment newFragment = new TimePickerFragment() {
             @Override
             public void onTimeSet(final TimePicker view, final int hourOfDay, final int minute) {
-                NewEventActivity.this.calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                NewEventActivity.this.calendar.set(Calendar.MINUTE, minute);
+                setCalendarTime(hourOfDay, minute);
                 final String timeStrEnd = DateFormat.format("HH:mm", NewEventActivity.this.calendar).toString();
                 NewEventActivity.this.calendar.add(Calendar.HOUR_OF_DAY, 1);
                 ((TextView)myView).setText(timeStrEnd);
@@ -176,38 +170,75 @@ public class NewEventActivity extends Activity {
      */
     public void onCreateEventClicked(final View myView) {
         final EditText titleView = (EditText) this.findViewById(R.id.event_title_input);
-        this.eventTitle = titleView.getText().toString();
-        if (null != this.eventTitle) {
+        this.eventTitle = titleView.getText().toString(); // Obtain event title.
+        if (null != this.eventTitle && !this.eventTitle.trim().isEmpty()) { // Title must not be empty.
             final TextView startTimeView = (TextView) this.findViewById(R.id.event_start_time);
             final TextView endTimeView = (TextView) this.findViewById(R.id.event_end_time);
             final EditText locationView = (EditText) this.findViewById(R.id.event_location_input);
             final EditText inviteesView = (EditText) this.findViewById(R.id.event_add_ppl_input);
             final EditText noteView = (EditText) this.findViewById(R.id.event_note_input);
-            this.startTimeVar = startTimeView.getText().toString();
-            this.endTimeVar = endTimeView.getText().toString();
-            this.location = locationView.getText().toString();
-            this.invitees = inviteesView.getText().toString();
-            this.note = noteView.getText().toString();
-            Log.i(TAG, "is all day: " + Boolean.toString(this.isAllDay));
-            Log.i(TAG, "title: " + this.eventTitle);
-            Log.i(TAG, "start year: " + this.startYearVar);
-            Log.i(TAG, "start month: " + this.startMonthVar);
-            Log.i(TAG, "start day: " + this.startDayVar);
-            Log.i(TAG, "start time: " + this.startTimeVar);
-            Log.i(TAG, "finish year: " + this.endYearVar);
-            Log.i(TAG, "finish month: " + this.endMonthVar);
-            Log.i(TAG, "finish day: " + this.endDayVar);
-            Log.i(TAG, "end time: " + this.endTimeVar);
-            Log.i(TAG, "location: " + this.location);
-            Log.i(TAG, "invitees: " + this.invitees);
-            Log.i(TAG, "note: " + this.note);
-            ServerHelper.sendToServer(this.eventTitle, this.note, this.location,
+            // Obtain start time, end time, location, invitees, and note strings from respective fields.
+            setFieldVars(startTimeView.getText().toString(), endTimeView.getText().toString(),
+                    locationView.getText().toString(), inviteesView.getText().toString(),
+                    noteView.getText().toString());
+            ServerHelper.createEvent(this.eventTitle, this.note, this.location,
                     this.startYearVar, this.startMonthVar, this.startDayVar,
                     this.startTimeVar, this.endYearVar, this.endMonthVar,
                     this.endDayVar, this.endTimeVar, Boolean.toString(this.isAllDay));
+            /** Delete **/
+            Log.d(TAG, "event title: " + this.eventTitle);
+            Log.d(TAG, "is all day? " + Boolean.toString(this.isAllDay));
+            Log.d(TAG, "start year: " + this.startYearVar);
+            Log.d(TAG, "start month: " + this.startMonthVar);
+            Log.d(TAG, "start day: " + this.startDayVar);
+            Log.d(TAG, "start time: " + this.startTimeVar);
+            Log.d(TAG, "end year: " + this.endYearVar);
+            Log.d(TAG, "end month: " + this.endMonthVar);
+            Log.d(TAG, "end day: " + this.endDayVar);
+            Log.d(TAG, "end time: " + this.endTimeVar);
+            Log.d(TAG, "location: " + this.location);
+            Log.d(TAG, "invitees: " + this.invitees);
+            Log.d(TAG, "note: " + this.note);
+            /** **/
+            toastEventCreated(this.eventTitle); // Lets user know event was created.
+            this.finish(); // Terminate activity.
         } else {
-            // TODO: pop up saying there's an error.
+            promptEnterEventName();
         }
+    }
+
+    /**
+     * Sets the various field variables.
+     * @param startTime     chosen event start time.
+     * @param endTime       chosen event end time.
+     * @param location      chosen event location.
+     * @param invitees      chosen event invitees.
+     * @param note          note for event.
+     */
+    private void setFieldVars(final String startTime, final String endTime, final String location,
+                              final String invitees, final String note) {
+        this.startTimeVar = startTime;
+        this.endTimeVar = endTime;
+        this.location = location;
+        this.invitees = invitees;
+        this.note = note;
+    }
+
+    /**
+     * Create a toast to let the user know the event was created.
+     * @param title         title of the created event.
+     */
+    private void toastEventCreated(final String title) {
+        Toast.makeText(this.getApplicationContext(), title + " event created.", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Prompts the user to enter the name of the event.
+     */
+    private void promptEnterEventName() {
+        // TODO: pop up saying there's an error.
+        final InputNameDialogFragment dialogFragment = new InputNameDialogFragment();
+        dialogFragment.show(getFragmentManager(), "inputEventName");
     }
 
     /**
@@ -215,33 +246,115 @@ public class NewEventActivity extends Activity {
      */
     private void setDefaultDateAndTime() {
         final Intent intent = getIntent();
+        // Fill out the date and time parameters on start of activity based on day selected and current time.
         final int day = Integer.parseInt(intent.getStringExtra("day"));
         final int month = Integer.parseInt(intent.getStringExtra("month"));
         final int year = Integer.parseInt(intent.getStringExtra("year"));
-        this.calendar.set(Calendar.DAY_OF_MONTH, day);
-        this.calendar.set(Calendar.MONTH, month);
-        this.calendar.set(Calendar.YEAR, year);
-        this.startTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString();
-        this.calendar.add(Calendar.HOUR, 1);
-        this.endTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString();
+        setBothDateVars(String.valueOf(year), String.valueOf(month), String.valueOf(day));
+        setCalendarDate(year, month, day); // Update the calendar object to reflect current information.
+        this.calendar.add(Calendar.HOUR_OF_DAY, 1); // Move forward one hour.
+        this.startTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString(); // Set default start time.
+        this.calendar.add(Calendar.HOUR_OF_DAY, 1); // Move forward one hour.
+        this.endTimeVar = DateFormat.format("HH:" + "00", this.calendar).toString(); // Set default end time.
         final String monthStr = DateFormat.format("MMM", this.calendar).toString();
         final String dayStr = DateFormat.format("dd", this.calendar).toString();
         final String weekDay = DateFormat.format("EEEE", this.calendar).toString();
         final String yearStr = DateFormat.format("yyyy", this.calendar).toString();
-        final String dateString = String.format("%s, %s %s %s", weekDay, dayStr, monthStr, yearStr);
+        // Generate the date information string.
+        final String dateString = generateDateString(weekDay, dayStr, monthStr, yearStr);
+        // Place date information string in both the star and end date fields.
         final TextView startDate = (TextView) this.findViewById(R.id.start_date);
         final TextView startTime = (TextView) this.findViewById(R.id.event_start_time);
         final TextView endDate = (TextView) this.findViewById(R.id.end_date);
         final TextView endTime = (TextView) this.findViewById(R.id.event_end_time);
         startDate.setText(dateString);
         endDate.setText(dateString);
-        startTime.setText(this.startTimeVar);
-        endTime.setText(this.endTimeVar);
-        this.startYearVar = String.valueOf(year);
-        this.startMonthVar = String.valueOf(month);
-        this.startDayVar = String.valueOf(day);
-        this.endYearVar = this.startYearVar;
-        this.endMonthVar = this.startMonthVar;
-        this.endDayVar = this.startDayVar;
+        startTime.setText(this.startTimeVar); // Set the default start time for field.
+        endTime.setText(this.endTimeVar); // Set the default end time for field.
+    }
+
+    /**
+     * Sets the date variables.
+     * @param startYear     start year of event.
+     * @param startMonth    end year of event.
+     * @param startDay      start day of event.
+     */
+    private void setBothDateVars(final String startYear, final String startMonth, final String startDay) {
+        this.startYearVar = startYear;
+        this.startMonthVar = startMonth;
+        this.startDayVar = startDay;
+        setEndDateVars(startYear, startMonth, startDay);
+    }
+
+    /**
+     * Sets the end date variables.
+     * @param endYear       end year of event.
+     * @param endMonth      end month of event.
+     * @param endDay        end day of event.
+     */
+    private void setEndDateVars(final String endYear, final String endMonth, final String endDay) {
+        this.endYearVar = endYear;
+        this.endMonthVar = endMonth;
+        this.endDayVar = endDay;
+    }
+
+    /**
+     * Generates a date string of format: Weekday, XX Month XXXX.
+     * @param weekDay       string representation of weekday.
+     * @param dayOfMonth    string representation of day of month.
+     * @param month         string representation of month.
+     * @param year          string representation of year.
+     * @return              a date string.
+     */
+    private String generateDateString(final String weekDay, final String dayOfMonth, final String month,
+                                      final String year) {
+        return weekDay + ", " + dayOfMonth + " " + month + " " + year;
+    }
+
+    /**
+     * Sets the date for the calendar object.
+     * @param year          year for the calendar.
+     * @param month         month for the calendar.
+     * @param dayOfMonth    day of month for the calendar.
+     */
+    private void setCalendarDate(final int year, final int month, final int dayOfMonth) {
+        this.calendar.set(Calendar.YEAR, year);
+        this.calendar.set(Calendar.MONTH, month);
+        this.calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+    }
+
+    /**
+     * Sets the time for the calendar object.
+     * @param hour      the hour of event.
+     * @param minute    the minute of event.
+     */
+    private void setCalendarTime(final int hour, final int minute) {
+        this.calendar.set(Calendar.HOUR_OF_DAY, hour);
+        this.calendar.set(Calendar.MINUTE, minute);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.setResult(Constants.REQUEST_EXIT);
+    }
+
+    /**
+     * Dialogue fragment class for creating a pop up window.
+     */
+    public static class InputNameDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.request_event_name)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, final int id) {
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
     }
 }
