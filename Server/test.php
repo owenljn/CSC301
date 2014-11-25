@@ -36,7 +36,7 @@ while($e=mysql_fetch_assoc($retval)) {
 //        $output[]=$e;
 		$JSONpayload ="\"data\":{\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
 }
-$JSONpayload = $JSONpayload.$JSONevents."]}\"";
+$JSONpayload = $JSONpayload.$JSONevents."]}}}\"";
 //$JSONstr = json_encode($output);
 /*
 '{"registration_ids" :[

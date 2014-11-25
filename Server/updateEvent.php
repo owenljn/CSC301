@@ -62,27 +62,31 @@ if(! $result )
 // Reformat the string into a JSON object
 $JSONevents = "";
 $JSONpayload = "";
-while($e=mysql_fetch_assoc($result)) {
+/* while($e=mysql_fetch_assoc($result)) {
 		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":".$e['eventname'] . ",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":".$e['StartTime'] . ",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":".$e['FinishTime'] . ",\"location\":".$e['Location'] . ",\"description\":".$e['description'] . ",\"isAllDay\":".$e['settings'] . "}]}";
 		$JSONpayload ="\"data\":{\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
+} */
+while($e=mysql_fetch_assoc($result)) {
+		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":".$e['eventname'] . ",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":".$e['StartTime'] . ",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":".$e['FinishTime'] . ",\"location\":".$e['Location'] . ",\"description\":".$e['description'] . ",\"isAllDay\":".$e['settings'] . "}]}";
+		$JSONpayload ="\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
 }
 $JSONpayload = $JSONpayload.$JSONevents."]}\"";
 //$registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
 
-function EncodeJSON($JSONpayload,$registrationId) {
+/* function EncodeJSON($JSONpayload,$registrationId) {
 	$result = "{\"registration_ids\" :[".$registrationId."],".$JSONpayload;
 	return $result;
-}
-
+} */
 $registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
 $apiKey = "AIzaSyA82yCJnslrBvS7RQqr0VwBTtRZ0GPryqQ";
-// Now the GCM part
+
+/* // Now the GCM part, this is version 1
 $url = 'https://android.googleapis.com/gcm/send';
 
-/* $fields = array(
-                'registration_ids'  => array($_POST['registrationIDs']),
-                'data'              => array( "message" => $message ),
-                ); */
+// $fields = array(
+//                'registration_ids'  => array($_POST['registrationIDs']),
+//                'data'              => array( "message" => $message ),
+//                ); 
 $fileds = EncodeJSON($JSONpayload,$registrationId); 
 $headers = array( 
                     'Authorization: key=' . $apiKey],
@@ -98,8 +102,8 @@ curl_setopt( $ch, CURLOPT_URL, $url );
 curl_setopt( $ch, CURLOPT_POST, true );
 curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-/* 
-curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) ); */
+
+//curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $fields ) ); 
 curl_setopt( $ch, CURLOPT_POSTFIELDS, $fields );
 
 // Execute post
@@ -107,6 +111,52 @@ $response = curl_exec($ch);
 
 // Close connection
 curl_close($ch);
+ */
+// This is the version 2
+    //Sending Push Notification
+function send_push_notification($registatoin_ids, $message, $apiKey) {
+         
+ 
+	// Set POST variables
+    $url = 'https://android.googleapis.com/gcm/send';
+ 
+    $fields = array(
+        'registration_ids' => $registatoin_ids,
+        'data' => $message,
+    );
+ 
+    $headers = array(
+        'Authorization: key=' . $apiKey,
+        'Content-Type: application/json'
+    );
+    //print_r($headers);
+    // Open connection
+    $ch = curl_init();
+ 
+    // Set the url, number of POST vars, POST data
+    curl_setopt($ch, CURLOPT_URL, $url);
+ 
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+ 
+    // Disabling SSL Certificate support temporarly
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+ 
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+ 
+    // Execute post
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+    }
+ 
+    // Close connection
+    curl_close($ch);
+    echo $result;
+}
+
+send_push_notification($registrationId, $JSONpayload, $apiKey);
 mysql_close($conn);
 /* function sendNotification( $apiKey, $registrationIdsArray, $messageData )
 {   
