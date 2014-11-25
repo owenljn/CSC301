@@ -12,11 +12,15 @@ $query = 'INSERT INTO person '.
        'VALUES ( "Tim","Chu","tckool","123", "tc@gmail.com" )';
 	   
 	   $sql = 'SELECT * FROM person';
+$eventname = "Test+plus+sign+and+startingTime+reverse";
+$eventname = str_replace('+', ' ', $eventname);
+$st = "23%3A00";
+$st = str_replace('%3A', ':', $st);
 $query2 = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
-       'VALUES ("Event title", "Test", "Bahen centre", "2014", "Nov", "21", "12", "2014", "Nov", "22", "12", "True")';
+       'VALUES ("'.$eventname.'", "Test", "Bahen centre", "2014", "Nov", "21", "'.$st.'", "2014", "Nov", "22", "12", "True")';
 $check = 'SELECT * FROM events '.
-       'WHERE eventname = "Event title" ';
+       'WHERE eventname = "'.$eventname.'" ';
 mysql_select_db('TaskManager');
 mysql_query($query2, $conn);
 $retval = mysql_query( $check, $conn );

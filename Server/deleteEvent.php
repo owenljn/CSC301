@@ -10,6 +10,10 @@ if(! $conn )
 
 $rawData = file_get_contents("php://input");
 
+// Decode the data so plus signs are converted back to space chars
+$rawData = str_replace('+', ' ', $rawData);
+
+//Delimiter array by "=" sign
 $name = explode("=", $rawData);
 
 $eventname = $name[1];

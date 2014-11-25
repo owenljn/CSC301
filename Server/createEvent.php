@@ -10,15 +10,13 @@ if(! $conn )
 
 $rawData = file_get_contents("php://input");
 
+// Decode the data so plus signs are converted back to space chars
+$rawData = str_replace('+', ' ', $rawData);
+
+//Delimiter array by "&" sign
 $array = explode("&", $rawData);
 
-
-/* $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-fwrite($myfile, $array);
-fclose($myfile); */
-
-
-
+// Get the name:value pairs
 $name = explode("=", $array[0]);
 $description = explode("=", $array[1]);
 $location = explode("=", $array[2]);
@@ -32,6 +30,7 @@ $EndDay = explode("=", $array[9]);
 $finishTime = explode("=", $array[10]);
 $setting = explode("=", $array[11]);
 
+// Grab the value
 $eventname = $name[1];
 $des = $description[1];
 $loc = $location[1];
@@ -44,10 +43,14 @@ $fm = $EndMonth[1];
 $fd = $EndDay[1];
 $ft = $finishTime[1];
 $settings = $setting[1];
-	   
+$st = str_replace('%3A', ':', $st);
+$ft = str_replace('%3A', ':', $ft);	   
+// Execute query
 $query = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
        'VALUES ("'.$eventname.'", "'.$des.'", "'.$loc.'", "'.$sy.'", "'.$sm.'", "'.$sd.'", "'.$st.'", "'.$fy.'", "'.$fm.'", "'.$fd.'", "'.$ft.'", "'.$settings.'")';
+
+// Execute this query to check if successfully inserted into database
 $check = 'SELECT * FROM events'.
        'WHERE eventname = "'.$eventname.'" ';
 
@@ -58,11 +61,12 @@ if(! $result )
 {
   die('Could not enter data: ' . mysql_error());
 }
+
+// Reformat the string into a JSON object
 $JSONevents = "";
 $JSONpayload = "";
 while($e=mysql_fetch_assoc($result)) {
 		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":".$e['eventname'] . ",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":".$e['StartTime'] . ",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":".$e['FinishTime'] . ",\"location\":".$e['Location'] . ",\"description\":".$e['description'] . ",\"isAllDay\":".$e['settings'] . "}]}";
-//        $output[]=$e;
 		$JSONpayload ="\"data\":{\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
 }
 $JSONpayload = $JSONpayload.$JSONevents."]}\"";
@@ -110,9 +114,9 @@ $response = sendNotification(
                 array($registrationId), 
                 //EncodeJSON($JSONpayload,$registrationId));
 				array('message' => $message, 'tickerText' => $tickerText, 'contentTitle' => $contentTitle, "contentText" => $contentText));
- $file = 'newfile.txt';
+/*  $file = 'newfile.txt';
  file_put_contents($file, $response);
-echo $response;
+echo $response; */
 
 mysql_close($conn);
 ?>

@@ -10,6 +10,10 @@ if(! $conn )
 
 $rawData = file_get_contents("php://input");
 
+// Decode the data so plus signs are converted back to space chars
+$rawData = str_replace('+', ' ', $rawData);
+
+//Delimiter array by "&" sign
 $array = explode("&", $rawData);
 
 $name = explode("=", $array[0]);
@@ -38,6 +42,8 @@ $fm = $EndMonth[1];
 $fd = $EndDay[1];
 $ft = $finishTime[1];
 $settings = $setting[1];
+$st = str_replace('%3A', ':', $st);
+$ft = str_replace('%3A', ':', $ft);	 
 
 	   
 $query = 'Update events '.
