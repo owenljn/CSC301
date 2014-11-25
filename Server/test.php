@@ -12,10 +12,12 @@ $query = 'INSERT INTO person '.
        'VALUES ( "Tim","Chu","tckool","123", "tc@gmail.com" )';
 	   
 	   $sql = 'SELECT * FROM person';
-$eventname = "Test+plus+sign+and+startingTime+reverse";
-$eventname = str_replace('+', ' ', $eventname);
+$eventname = "Test+url+decode+and+startingTime";
 $st = "23%3A00";
-$st = str_replace('%3A', ':', $st);
+$eventname = urldecode($eventname);
+$st = urldecode($st);
+/* $eventname = str_replace('+', ' ', $eventname);
+$st = str_replace('%3A', ':', $st); */
 $query2 = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
        'VALUES ("'.$eventname.'", "Test", "Bahen centre", "2014", "Nov", "21", "'.$st.'", "2014", "Nov", "22", "12", "True")';

@@ -11,7 +11,8 @@ if(! $conn )
 $rawData = file_get_contents("php://input");
 
 // Decode the data so plus signs are converted back to space chars
-$rawData = str_replace('+', ' ', $rawData);
+//$rawData = str_replace('+', ' ', $rawData);
+$rawData = urldecode($rawData);
 
 //Delimiter array by "&" sign
 $array = explode("&", $rawData);
@@ -43,8 +44,9 @@ $fm = $EndMonth[1];
 $fd = $EndDay[1];
 $ft = $finishTime[1];
 $settings = $setting[1];
-$st = str_replace('%3A', ':', $st);
-$ft = str_replace('%3A', ':', $ft);	   
+/* $st = str_replace('%3A', ':', $st);
+$ft = str_replace('%3A', ':', $ft);	    */
+
 // Execute query
 $query = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
