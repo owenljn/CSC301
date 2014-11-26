@@ -54,10 +54,13 @@ public class TaskListActivity extends Activity {
                 addEventActivity();
                 return true;
             case R.id.action_prev:
+                // TODO: Implement day scrolling.
                 return true;
             case R.id.action_today:
+                // TODO: Implement day scrolling.
                 return true;
             case R.id.action_next:
+                // TODO: Implement day scrolling.
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -82,10 +85,6 @@ public class TaskListActivity extends Activity {
             this.finish();
         }
     }
-
-    /**
-     *
-     */
 
     @Override
     protected void onRestart() {

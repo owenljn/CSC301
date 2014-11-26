@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.utoronto.timemng.app.R;
 import com.utoronto.timemng.event.EventDto;
 
@@ -29,6 +30,11 @@ public class EventListConstructor {
 
     /**
      * Constructs a list of events.
+     * @param activity      parent activity.
+     * @param events        list of events for the day.
+     * @param year          the year the events start.
+     * @param month         the month the events start.
+     * @param day           the day the events start.
      */
     public EventListConstructor(final Activity activity, final List<EventDto> events,
                                 final int year, final int month, final int day) {
@@ -52,10 +58,10 @@ public class EventListConstructor {
         listView.setAdapter(adapter);
         // Set a click listener.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-
+                final EventDto tag = (EventDto) view.getTag();
+                Toast.makeText(activity.getApplicationContext(), tag.getEventTitle(), Toast.LENGTH_SHORT).show();
             }
         });
     }

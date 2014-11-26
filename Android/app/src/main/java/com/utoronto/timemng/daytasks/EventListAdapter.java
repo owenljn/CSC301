@@ -116,7 +116,7 @@ public class EventListAdapter extends BaseAdapter {
         }
 
         row.setBackgroundColor(Color.parseColor("#C2DFFF"));
-        row.setTag(eventId); // Tag the row with the event id.
+        row.setTag(getItem(position)); // Tag the row with the event id.
         return row;
     }
 }

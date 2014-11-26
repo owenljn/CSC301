@@ -41,7 +41,7 @@ public class NewEventActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_event);
+        setContentView(R.layout.add_edit_event);
         // Keep orientation portrait for now.
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setDefaultDateAndTime();
