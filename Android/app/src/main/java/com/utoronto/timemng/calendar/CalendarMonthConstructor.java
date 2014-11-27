@@ -52,6 +52,8 @@ public class CalendarMonthConstructor {
      */
     private final Map<Integer, List<EventDto>> eventMap;
 
+    private final Map<Integer, List<EventDto>> eventMap2;
+
     /**
      * Default constructor for this class.
      */
@@ -62,6 +64,7 @@ public class CalendarMonthConstructor {
             throw new IllegalArgumentException("need to set the activity before trying to create new instance");
         }
         this.eventMap = new HashMap<Integer, List<EventDto>>();
+        this.eventMap2 = new HashMap<Integer, List<EventDto>>();
         this.selMonth = Calendar.getInstance(); // Get this month calendar.
         this.adapter = new CalendarGridAdapter(activity, this.selMonth); // Create an adapter.
         this.gridView = (GridView) activity.findViewById(R.id.calendar_grid); // Get the GridView item.
@@ -132,6 +135,7 @@ public class CalendarMonthConstructor {
     public final void setNextMonth() {
         // TODO: request updated event list for new month from server.
         this.selMonth.add(Calendar.MONTH, 1);
+        this.eventMap.clear();
         refactorCalendar();
         whichMonthString();
     }
@@ -142,6 +146,7 @@ public class CalendarMonthConstructor {
     public final void setPrevMonth() {
         // TODO: request updated list for new month from server.
         this.selMonth.add(Calendar.MONTH, -1);
+        this.eventMap.clear();
         refactorCalendar();
         whichMonthString();
     }
@@ -152,6 +157,7 @@ public class CalendarMonthConstructor {
     public void setToday() {
         // TODO: request updated list for new month from server.
         this.selMonth = Calendar.getInstance();
+        this.eventMap.putAll(this.eventMap2);
         refactorCalendar();
         whichMonthString();
     }
@@ -168,11 +174,15 @@ public class CalendarMonthConstructor {
      * Redraws the calendar based on the changes made. Called every time a different
      * month is selected.
      */
-    private void refactorCalendar() {
+    public void refactorCalendar() {
         this.adapter.setMonth(this.selMonth);
         this.adapter.makeCalendarArray();
         this.adapter.notifyDataSetChanged();
+        this.gridView.invalidateViews();
+        this.gridView.setAdapter(this.adapter);
     }
+
+
 
     /**
      * Populates the map with day of month as key and events as value with events.
@@ -200,6 +210,7 @@ public class CalendarMonthConstructor {
                 }
             }
         }
+        this.eventMap2.putAll(this.eventMap);
     }
 
     /**

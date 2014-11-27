@@ -136,16 +136,28 @@ public class EventDto {
         return this.startTime;
     }
 
+    /**
+     * Gets the end year for the event.
+     * @return  end year for the event.
+     */
     @JsonProperty(END_YEAR)
     public int getEndYear() {
         return this.endYear;
     }
 
+    /**
+     * Gets the end month for the event.
+     * @return  end month for the event.
+     */
     @JsonProperty(END_MONTH)
     public int getEndMonth() {
         return this.endMonth;
     }
 
+    /**
+     * Gets the end day of month for the event.
+     * @return  end day of month for the event.
+     */
     @JsonProperty(END_DAY_OF_MONTH)
     public int getEndDayOfMonth() {
         return this.endDayOfMonth;

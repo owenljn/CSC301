@@ -31,9 +31,9 @@
                 android:name="com.utoronto.timemng.app.TaskListActivity"
                 android:configChanges="orientation|keyboardHidden"
                 android:label="@string/app_name"
-                android:parentActivityName="com.utoronto.timemng.app.CoreActivity">
+                android:parentActivityName="com.utoronto.timemng.daytasks.EventListConstructor">
         </activity>
-        <activity android:name="com.utoronto.timemng.app.NewEventActivity"
+        <activity android:name=".AddDelUpdEventActivity"
                   android:configChanges="orientation|keyboardHidden"
                   android:label="TM"
                   android:parentActivityName="com.utoronto.timemng.app.TaskListActivity">

@@ -1,13 +1,15 @@
 package com.utoronto.timemng.daytasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.utoronto.timemng.app.AddDelUpdEventActivity;
 import com.utoronto.timemng.app.R;
+import com.utoronto.timemng.app.constants.Constants;
 import com.utoronto.timemng.event.EventDto;
 
 import java.util.Calendar;
@@ -27,6 +29,7 @@ public class EventListConstructor {
     private final int month;
     private final int day;
     private final Calendar thisCal;
+    private final EventListAdapter adapter;
 
     /**
      * Constructs a list of events.
@@ -49,19 +52,33 @@ public class EventListConstructor {
         this.thisCal.set(Calendar.MONTH, month);
         this.thisCal.set(Calendar.DAY_OF_MONTH, day);
         // Create an adapter.
-        final EventListAdapter adapter = new EventListAdapter(activity, events);
+        this.adapter = new EventListAdapter(activity, events);
         // Find the list view.
         final ListView listView = (ListView) activity.findViewById(R.id.event_list);
         // Set date.
         whichDateString();
         // Set adapter.
-        listView.setAdapter(adapter);
+        listView.setAdapter(this.adapter);
         // Set a click listener.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final EventDto tag = (EventDto) view.getTag();
-                Toast.makeText(activity.getApplicationContext(), tag.getEventTitle(), Toast.LENGTH_SHORT).show();
+                final Intent intent = new Intent(EventListConstructor.this.activity, AddDelUpdEventActivity.class);
+                intent.putExtra("type", "edit");
+                intent.putExtra("eventName", tag.getEventTitle());
+                intent.putExtra("startYear", String.valueOf(tag.getStartYear()));
+                intent.putExtra("startMonth", String.valueOf(tag.getStartMonth()));
+                intent.putExtra("startDay", String.valueOf(tag.getStartDayOfMonth()));
+                intent.putExtra("startTime", tag.getStartTime());
+                intent.putExtra("endYear", String.valueOf(tag.getEndYear()));
+                intent.putExtra("endMonth", String.valueOf(tag.getEndMonth()));
+                intent.putExtra("endDay", String.valueOf(tag.getEndDayOfMonth()));
+                intent.putExtra("endTime", tag.getEndTime());
+                intent.putExtra("isAllDay", Boolean.toString(tag.isAllDay()));
+                intent.putExtra("description", tag.getDescription());
+                intent.putExtra("location", tag.getLocation());
+                EventListConstructor.this.activity.startActivityForResult(intent, Constants.REQUEST_EXIT);
             }
         });
     }

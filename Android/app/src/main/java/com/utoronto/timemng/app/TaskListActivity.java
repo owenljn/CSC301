@@ -71,7 +71,8 @@ public class TaskListActivity extends Activity {
      * Starts an activity for adding a new event.
      */
     private void addEventActivity() {
-        final Intent intent = new Intent(this, NewEventActivity.class);
+        final Intent intent = new Intent(this, AddDelUpdEventActivity.class);
+        intent.putExtra("type", "add");
         intent.putExtra("day", String.valueOf(this.dayOfMonth));
         intent.putExtra("year", String.valueOf(this.year));
         intent.putExtra("month", String.valueOf(this.month));
