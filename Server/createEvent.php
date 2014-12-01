@@ -50,8 +50,10 @@ $query = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
        'VALUES ("'.$eventname.'", "'.$des.'", "'.$loc.'", "'.$sy.'", "'.$sm.'", "'.$sd.'", "'.$st.'", "'.$fy.'", "'.$fm.'", "'.$fd.'", "'.$ft.'", "'.$settings.'")';
 // Execute this query to check if successfully inserted into database
+/* $check = 'SELECT * FROM events '.
+       'WHERE eventname = "'.$eventname.'" '; */
 $check = 'SELECT * FROM events '.
-       'WHERE eventname = "'.$eventname.'" ';
+	   'WHERE startYear = "'.$sy.'" AND startMonth =  "'.$sm.'" AND startDay =  "'.$sd.'"';
 mysql_select_db('TaskManager');
 mysql_query($query, $conn);
 $result = mysql_query($check, $conn);
@@ -61,10 +63,13 @@ if(!$result)
 }
 // Reformat the string into a JSON object
 $JSONevents = "";
-$JSONpayload = "";
-while($e=mysql_fetch_assoc($result)) {
+$JSONpayload ="{\"days\":[";
+/* while($e=mysql_fetch_assoc($result)) {
 		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]}";
 		$JSONpayload ="{\"days\":[{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{";
+} */
+while($e=mysql_fetch_assoc($result)) {
+		$JSONevents = $JSONevents . "{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]},";
 }
 $JSONpayload = $JSONpayload.$JSONevents;
 $JSONpayload = $JSONpayload."]}";

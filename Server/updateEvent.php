@@ -53,8 +53,10 @@ $query = 'Update events '.
        'WHERE eventname = "'.$eventname.'" ';
 
 // Execute this query to check if successfully inserted into database
+/* $check = 'SELECT * FROM events '.
+       'WHERE eventname = "'.$eventname.'" '; */
 $check = 'SELECT * FROM events '.
-       'WHERE eventname = "'.$eventname.'" ';
+	   'WHERE startYear = "'.$sy.'" AND startMonth =  "'.$sm.'" AND startDay =  "'.$sd.'"';
 mysql_select_db('TaskManager');
 mysql_query($query, $conn);
 $result = mysql_query($check, $conn);
@@ -65,10 +67,15 @@ if(! $result )
 
 // Reformat the string into a JSON object
 $JSONevents = "";
-$JSONpayload = "";
+$JSONpayload ="{\"days\":[";
+/* $JSONpayload = "";
 while($e=mysql_fetch_assoc($result)) {
 		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]}";
 		$JSONpayload ="{\"days\":[{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{";
+} */
+
+while($e=mysql_fetch_assoc($result)) {
+		$JSONevents = $JSONevents . "{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]},";
 }
 $JSONpayload = $JSONpayload.$JSONevents;
 $JSONpayload = $JSONpayload."]}";
@@ -103,7 +110,7 @@ function send_push_notification($registration_ids, $message, $apiKey) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
  
-    // Disabling SSL Certificate support temporarly
+    // Disabling SSL Certificate support temporarily
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
  
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
