@@ -11,29 +11,28 @@ if(! $conn )
 $rawData = file_get_contents("php://input");
 
 // Decode the data so plus signs are converted back to space chars
-//$rawData = str_replace('+', ' ', $rawData);
 $rawData = urldecode($rawData);
 
 //Delimiter array by "=" sign
-$name = explode("=", $rawData);
+$eventname = explode("=", $rawData)[1];
 
-$eventname = $name[1];
 $dRow = 'SELECT * FROM events '.
        'WHERE eventname = "'.$eventname.'"';
 $query = 'DELETE FROM events '.
-       'WHERE eventname = "'.$eventname.'" ';
+       'WHERE eventname = "'.$eventname.'"';
 	   
 mysql_select_db('TaskManager');
 
 // First fetch the event to be deleted then get it's startYear, startMonth, startDay attributes
 $resultD = mysql_query($dRow, $conn);
+
 $sy="";
 $sm="";
 $sd="";
-while($e=mysql_fetch_assoc($resultD)){
-	$sy=$sy.$e['StartYear'];
-	$sm=$sm.$e['StartMonth'];
-	$sd=$sd.$e['StartDay'];
+while($d=mysql_fetch_assoc($resultD)){
+	$sy=$sy.$d['StartYear'];
+	$sm=$sm.$d['StartMonth'];
+	$sd=$sd.$d['StartDay'];
 }
 
 // Then Delete this event
@@ -48,13 +47,16 @@ $result = mysql_query($returnAll, $conn);
 $JSONevents = "";
 $JSONpayload = "";
 while($e=mysql_fetch_assoc($result)) {
-		$JSONevents = $JSONevents . "{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]},";
-		$JSONpayload ="{\"days\":[";
+		$JSONevents = $JSONevents . "{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "},";
+		$JSONpayload ="{\"days\":[{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[";
 }
 $JSONpayload = $JSONpayload.$JSONevents;
-$JSONpayload = substr($JSONpayload,0,-1) ;
-$JSONpayload = $JSONpayload . "]}";
-//$JSONpayload2 = "{\"days\":[{\"year\":2014,\"month\":10,\"day\":23,\"events\":[{\"eventId\":1,\"eventTitle\":\"CSC373H1F Test\",\"startYear\":2014,\"startMonth\":10,\"startDayOfMonth\":23,\"startTime\":\"20:00\",\"endYear\":2014,\"endMonth\":10,\"endDayOfMonth\":23,\"endTime\":\"21:00\",\"location\":\"Bahen\",\"description\":\"Bleh\",\"isAllDay\":false}]},{\"year\":2014,\"month\":10,\"day\":24,\"events\":[{\"eventId\":1,\"eventTitle\":\"Doctor Appointment\",\"startYear\":2014,\"startMonth\":10,\"startDayOfMonth\":24,\"startTime\":\"15:00\",\"endYear\":2014,\"endMonth\":10,\"endDayOfMonth\":24,\"endTime\":\"16:00\",\"location\":null,\"description\":\"fsdf\",\"isAllDay\":false}]}]\"}";
+$JSONpayload = substr($JSONpayload,0,-1);
+if ($JSONevents != "") {
+	$JSONpayload = $JSONpayload . "]}]}";
+} else {
+	$JSONpayload = $JSONpaylaod."{\"days\":[{\"year\":".$sy.",\"month\":".$sm.",\"day\":".$sd.",\"events\":[]}]}\"";
+}
 $message = array($JSONpayload);
 $registrationId = array("APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg");
 $apiKey = "AIzaSyA82yCJnslrBvS7RQqr0VwBTtRZ0GPryqQ";

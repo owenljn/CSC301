@@ -14,7 +14,23 @@ if(! $conn )
 	   $sql = 'SELECT * FROM person';
 $eventname = "Test+url+decode+and+startingTime";
 $eventname = urldecode($eventname); */
-$st = urldecode($st);
+//$st = urldecode($st);
+$rawData = "eventname=ToDelete2";
+echo "before explosion\n";
+print_r($rawData);
+//$f = fopen("testExplode.txt", "w");
+//fwrite($f, $rawData);
+//fwrite($f, "after explosion\n");
+//print_r(explode("=", $rawData));
+$Exploded = explode("=", $rawData)[1];
+echo "after exploded\n";
+print_r($Exploded);
+echo "\n";
+$deleteName = $Exploded[1];
+echo "after assigned\n";
+print_r($deleteName);
+//fwrite($f, $explode);
+//fclose($f);
 $event1 = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
        'VALUES ("Test event1", "Test", "Bahen centre", "2014", "Nov", "21", "23:00", "2014", "Nov", "22", "12", "True")';
@@ -75,11 +91,12 @@ $JSONpayload ="{\"days\":[";
 		$JSONpayload ="\"data\":{\"payload\":\"{\"days\":[{\"year\":".$e['StartYear'] . "\"month\":".$e['StartMonth']. "\"day\":".$e['StartDay']. "\"events\":[{";
 } */
 while($e=mysql_fetch_assoc($result)) {
-		$JSONevents = $JSONevents . "{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]},";
+		$JSONevents = $JSONevents . "{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "},";
+		$JSONpayload ="{\"days\":[{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[";
 }
 $JSONpayload = $JSONpayload.$JSONevents;
-$JSONpayload = substr($JSONpayload,0,-1) ;
-$JSONpayload = $JSONpayload . "]}";
+$JSONpayload = substr($JSONpayload,0,-1);
+$JSONpayload = $JSONpayload . "]}]}";
 fwrite($f, $JSONpayload);
 fclose($f);
 /*
