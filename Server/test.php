@@ -28,6 +28,7 @@ $event4 = 'INSERT INTO events '.
       '(eventname, description, Location, StartYear, StartMonth, StartDay, StartTime, EndYear, EndMonth, EndDay, FinishTime, settings) '.
        'VALUES ("Test event4", "Test", "Bahen centre", "2014", "Nov", "22", "00:00", "2014", "Nov", "22", "12", "True")';
 
+	   
 mysql_select_db('TaskManager');
 // First fetch the event to be deleted then get it's startYear, startMonth, startDay attributes
 $query = 'SELECT * FROM events '.
@@ -46,6 +47,14 @@ while($e=mysql_fetch_assoc($resultD)){
 	$sd=$sd.$e['StartDay'];
 }
 
+// This query tests update
+$update = 'Update events '.
+      'SET StartDay = "'.$sd.'"'.
+       'WHERE eventname = "Test event4" ';
+/* $query2 = 'DELETE FROM events '.
+       'WHERE eventname = "Test event4" '; */ //This query tests delete functionality
+mysql_query( $update, $conn );
+//mysql_query( $query2, $conn ); Test the delete functionality
 $check = 'SELECT * FROM events '.
 	   'WHERE startYear = "'.$sy.'" AND startMonth =  "'.$sm.'" AND startDay =  "'.$sd.'"';
 /* $check = 'SELECT * FROM events '.
@@ -68,7 +77,6 @@ $JSONpayload ="{\"days\":[";
 while($e=mysql_fetch_assoc($result)) {
 		$JSONevents = $JSONevents . "{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . "}]},";
 }
-//rtrim($JSONevents, ',');
 $JSONpayload = $JSONpayload.$JSONevents;
 $JSONpayload = substr($JSONpayload,0,-1) ;
 $JSONpayload = $JSONpayload . "]}";
