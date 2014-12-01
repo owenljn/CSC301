@@ -64,7 +64,6 @@ public class AddDelUpdEventActivity extends Activity {
      * Sets all fields for the fragment.
      */
     private void setAllFields() {
-        // TODO: Implement method.
         final TextView startDateBox = (TextView) this.findViewById(R.id.start_date);
         final TextView endDateBox = (TextView) this.findViewById(R.id.end_date);
         final EditText titleBox = (EditText) this.findViewById(R.id.event_title_input);
@@ -108,6 +107,7 @@ public class AddDelUpdEventActivity extends Activity {
     }
 
     public void onDeleteEventClicked(final View view) {
+        ServerHelper.deleteEvent(this.eventTitle);
         this.finish();
     }
 
