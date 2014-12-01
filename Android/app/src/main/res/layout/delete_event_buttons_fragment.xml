@@ -6,6 +6,13 @@
               android:orientation="horizontal"
               android:layout_marginTop="15dp"
               android:layout_gravity="bottom">
+    <Button android:id="@+id/edit_event_button"
+            android:text="@string/edit_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:onClick="onEditEventClicked"
+            android:background="?android:attr/selectableItemBackground"/>
     <Button android:id="@+id/delete_event_button"
             android:text="@string/delete_event"
             android:layout_width="0dp"

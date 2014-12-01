@@ -11,9 +11,9 @@
               android:layout_weight="1"
               android:layout_height="0dp"
               tools:layout="@layout/event_details_fragment"/>
-    <fragment android:name="com.utoronto.timemng.app.DeleteEventButBarFragment"
-              android:id="@+id/new_ev_but_bar"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              tools:layout="@layout/delete_event_buttons_fragment"/>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/button_container"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+    </FrameLayout>
 </LinearLayout>

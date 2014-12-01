@@ -34,4 +34,5 @@
     <string name="ok">Ok</string>
     <string name="request_event_name">Please enter title of event.</string>
     <string name="delete_event">Delete</string>
+    <string name="edit_button">Edit</string>
 </resources>

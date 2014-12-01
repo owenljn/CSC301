@@ -1,15 +1,11 @@
 package com.utoronto.timemng.app;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.*;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.utoronto.timemng.app.constants.Constants;
@@ -36,6 +32,16 @@ public class AddDelUpdEventActivity extends Activity {
     private String invitees;
     private String note;
 
+    private TextView startDateBox;
+    private TextView endDateBox;
+    private EditText titleBox;
+    private CheckBox allDayBox;
+    private TextView startTimeBox;
+    private TextView endTimeBox;
+    private EditText locationBox;
+    private EditText noteBox;
+    private EditText inviteesBox;
+
     private final Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -45,11 +51,19 @@ public class AddDelUpdEventActivity extends Activity {
         final String type = intent.getStringExtra("type");
         if ("add".equals(type)) {
             setContentView(R.layout.add_event);
+            assignViews();
             // Keep orientation portrait for now.
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             setDefaultDateAndTime();
         } else {
             setContentView(R.layout.edit_event);
+            if (null != savedInstanceState) {
+                return;
+            }
+            final DeleteEventButBarFragment delFrag = new DeleteEventButBarFragment();
+            delFrag.setArguments(getIntent().getExtras());
+            getFragmentManager().beginTransaction().add(R.id.button_container, delFrag).commit();
+            assignViews();
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             setAllFields();
         }
@@ -61,18 +75,53 @@ public class AddDelUpdEventActivity extends Activity {
     }
 
     /**
-     * Sets all fields for the fragment.
+     * Gets all the view references that will be used during the course of
+     * this activity running.
      */
-    private void setAllFields() {
-        final TextView startDateBox = (TextView) this.findViewById(R.id.start_date);
-        final TextView endDateBox = (TextView) this.findViewById(R.id.end_date);
-        final EditText titleBox = (EditText) this.findViewById(R.id.event_title_input);
-        final CheckBox allDayBox = (CheckBox) this.findViewById(R.id.checkbox_all_day);
-        final TextView startTimeBox = (TextView) this.findViewById(R.id.event_start_time);
-        final TextView endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
-        final EditText locationBox = (EditText) this.findViewById(R.id.event_location_input);
-        final EditText noteBox = (EditText) this.findViewById(R.id.event_note_input);
-        final Intent intent = getIntent();
+    private void assignViews() {
+        this.startDateBox = (TextView) this.findViewById(R.id.start_date);
+        this.endDateBox = (TextView) this.findViewById(R.id.end_date);
+        this.titleBox = (EditText) this.findViewById(R.id.event_title_input);
+        this.allDayBox = (CheckBox) this.findViewById(R.id.checkbox_all_day);
+        this.startTimeBox = (TextView) this.findViewById(R.id.event_start_time);
+        this.endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
+        this.locationBox = (EditText) this.findViewById(R.id.event_location_input);
+        this.noteBox = (EditText) this.findViewById(R.id.event_note_input);
+        this.inviteesBox = (EditText) this.findViewById(R.id.event_add_ppl_input);
+    }
+
+    /**
+     * Disables all editable fields.
+     */
+    void disableFields() {
+        this.allDayBox.setEnabled(false);
+        this.titleBox.setEnabled(false);
+        this.endDateBox.setClickable(false);
+        this.startDateBox.setClickable(false);
+        this.startTimeBox.setClickable(false);
+        this.endTimeBox.setClickable(false);
+        this.locationBox.setEnabled(false);
+        this.noteBox.setEnabled(false);
+    }
+
+    /**
+     * Enables all disabled fields.
+     */
+    void enableFields() {
+        this.allDayBox.setEnabled(true);
+        this.endDateBox.setClickable(true);
+        this.startDateBox.setClickable(true);
+        this.startTimeBox.setClickable(true);
+        this.endTimeBox.setClickable(true);
+        this.locationBox.setEnabled(true);
+        this.noteBox.setEnabled(true);
+    }
+
+    /**
+     * Retrieves and sets variables based on those stored in the intent.
+     * @param intent    the intent.
+     */
+    void retrieveVarsFromIntent(final Intent intent) {
         this.isAllDay = Boolean.parseBoolean(intent.getStringExtra("isAllDay"));
         this.eventTitle = intent.getStringExtra("eventName");
         this.startYearVar = intent.getStringExtra("startYear");
@@ -85,27 +134,83 @@ public class AddDelUpdEventActivity extends Activity {
         this.endTimeVar = intent.getStringExtra("endTime");
         this.note = intent.getStringExtra("description");
         this.location = intent.getStringExtra("location");
+    }
+
+    /**
+     * Sets all fields for the fragment.
+     */
+    private void setAllFields() {
+        this.inviteesBox.setEnabled(false);
+        final Intent intent = getIntent();
+        retrieveVarsFromIntent(intent);
         setCalendarDate(Integer.parseInt(this.startYearVar), Integer.parseInt(this.startMonthVar),
                 Integer.parseInt(this.startDayVar));
         String weekday = DateFormat.format("EEEE", this.calendar).toString();
         String month = DateFormat.format("MMM", this.calendar).toString();
         String dateStr = generateDateString(weekday, this.startDayVar, month, this.startYearVar);
-        allDayBox.setChecked(this.isAllDay);
-        titleBox.setEnabled(false);
-        titleBox.setText(this.eventTitle);
-        startDateBox.setText(dateStr);
+        this.allDayBox.setChecked(this.isAllDay);
+        this.titleBox.setText(this.eventTitle);
+        this.startDateBox.setText(dateStr);
         setCalendarDate(Integer.parseInt(this.endYearVar), Integer.parseInt(this.endMonthVar),
                 Integer.parseInt(this.endDayVar));
         weekday = DateFormat.format("EEEE", this.calendar).toString();
         month = DateFormat.format("MMM", this.calendar).toString();
         dateStr = generateDateString(weekday, this.endDayVar, month, this.endYearVar);
-        endDateBox.setText(dateStr);
-        startTimeBox.setText(this.startTimeVar);
-        endTimeBox.setText(this.endTimeVar);
-        locationBox.setText(this.location, TextView.BufferType.EDITABLE);
-        noteBox.setText(this.note, TextView.BufferType.EDITABLE);
+        this.endDateBox.setText(dateStr);
+        this.startTimeBox.setText(this.startTimeVar);
+        this.endTimeBox.setText(this.endTimeVar);
+        this.locationBox.setText(this.location, TextView.BufferType.EDITABLE);
+        this.noteBox.setText(this.note, TextView.BufferType.EDITABLE);
+        disableFields();
     }
 
+    /**
+     * Edit event button was clicked.
+     * @param view  the view that was clicked.
+     */
+    public void onEditEventClicked(final View view) {
+        enableFields(); // Enable all fields for editing.
+        final EditEventButBarFragment editButs = new EditEventButBarFragment() {
+            @Override
+            public void onStop() {
+                super.onStop();
+                disableFields(); // Want to disable fields again if user hits back.
+            }
+        };
+        final Bundle bundle = new Bundle();
+        editButs.setArguments(bundle);
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.button_container, editButs); // Replace the buttons.
+        transaction.addToBackStack(null); // Ensure that the back button will result in buttons returning.
+        transaction.commit();
+    }
+
+    /**
+     * User clicked submit changes.
+     * @param view  the view that was clicked.
+     */
+    public void onSubmitChangesClicked(final View view) {
+        // Obtain start time, end time, location, invitees, and note strings from respective fields.
+        setFieldVars(this.startTimeBox.getText().toString(), this.endTimeBox.getText().toString(),
+                this.locationBox.getText().toString(), this.inviteesBox.getText().toString(),
+                this.noteBox.getText().toString());
+        ServerHelper.updateEvent(this.eventTitle, this.note, this.location,
+                this.startYearVar, this.startMonthVar, this.startDayVar,
+                this.startTimeVar, this.endYearVar, this.endMonthVar,
+                this.endDayVar, this.endTimeVar, Boolean.toString(this.isAllDay));
+        toastEventUpdated(this.eventTitle); // Lets user know event was updated.
+        this.finish(); // Terminate activity.
+    }
+
+    private void toastEventUpdated(final String title) {
+        Toast.makeText(this.getApplicationContext(), title + " event updated.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    /**
+         * Describes the action for when the Delete button is clicked.
+         * @param view  the view that was clicked.
+         */
     public void onDeleteEventClicked(final View view) {
         ServerHelper.deleteEvent(this.eventTitle);
         this.finish();
@@ -121,16 +226,14 @@ public class AddDelUpdEventActivity extends Activity {
         // Get the text views for the start time and the end time.
         // If checked, then want to set the isAllDay variable to true, and make start
         // time and end time invisible.
-        final TextView startTimeBox = (TextView) this.findViewById(R.id.event_start_time);
-        final TextView endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
         if (checked) {
             this.isAllDay = true;
-            startTimeBox.setVisibility(View.INVISIBLE);
-            endTimeBox.setVisibility(View.INVISIBLE);
+            this.startTimeBox.setVisibility(View.INVISIBLE);
+            this.endTimeBox.setVisibility(View.INVISIBLE);
         } else { // Need to set visible again in case someone changes their mind and unchecks box.
             this.isAllDay = false;
-            startTimeBox.setVisibility(View.VISIBLE);
-            endTimeBox.setVisibility(View.VISIBLE);
+            this.startTimeBox.setVisibility(View.VISIBLE);
+            this.endTimeBox.setVisibility(View.VISIBLE);
         }
     }
 
@@ -139,7 +242,6 @@ public class AddDelUpdEventActivity extends Activity {
      * @param myView  the view that was clicked.
      */
     public void onStartDateClicked(final View myView) {
-        final TextView endDateBox = (TextView) this.findViewById(R.id.end_date);
         final DialogFragment newFragment = new DatePickerFragment() {
             @Override
             public void onDateSet(final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
@@ -149,7 +251,7 @@ public class AddDelUpdEventActivity extends Activity {
                 final String dateStr = generateDateString(weekDay, String.valueOf(dayOfMonth), monthStr,
                         String.valueOf(year));
                 ((TextView) myView).setText(dateStr);
-                endDateBox.setText(dateStr);
+                AddDelUpdEventActivity.this.endDateBox.setText(dateStr);
 
                 setBothDateVars(String.valueOf(year), String.valueOf(monthOfYear), String.valueOf(dayOfMonth));
             }
@@ -162,7 +264,6 @@ public class AddDelUpdEventActivity extends Activity {
      * @param myView  the view that was clicked.
      */
     public void onStartTimeClicked(final View myView) {
-        final TextView endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
         final DialogFragment newFragment = new TimePickerFragment() {
             @Override
             public void onTimeSet(final TimePicker view, final int hourOfDay, final int minute) {
@@ -171,7 +272,7 @@ public class AddDelUpdEventActivity extends Activity {
                 AddDelUpdEventActivity.this.calendar.add(Calendar.HOUR_OF_DAY, 1);
                 final String timeStrEnd = DateFormat.format("HH:mm", AddDelUpdEventActivity.this.calendar).toString();
                 ((TextView)myView).setText(timeStrStart);
-                endTimeBox.setText(timeStrEnd);
+                AddDelUpdEventActivity.this.endTimeBox.setText(timeStrEnd);
             }
         };
         newFragment.show(getFragmentManager(), "startTimePicker");
@@ -220,37 +321,16 @@ public class AddDelUpdEventActivity extends Activity {
      * @param myView  the button clicked.
      */
     public void onCreateEventClicked(final View myView) {
-        final TextView startTimeBox = (TextView) this.findViewById(R.id.event_start_time);
-        final TextView endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
-        final EditText titleBox = (EditText) this.findViewById(R.id.event_title_input);
-        final EditText locationBox = (EditText) this.findViewById(R.id.event_location_input);
-        final EditText noteBox = (EditText) this.findViewById(R.id.event_note_input);
-        final EditText inviteesBox = (EditText) this.findViewById(R.id.event_add_ppl_input);
-        this.eventTitle = titleBox.getText().toString(); // Obtain event title.
+        this.eventTitle = this.titleBox.getText().toString(); // Obtain event title.
         if (null != this.eventTitle && !this.eventTitle.trim().isEmpty()) { // Title must not be empty.
             // Obtain start time, end time, location, invitees, and note strings from respective fields.
-            setFieldVars(startTimeBox.getText().toString(), endTimeBox.getText().toString(),
-                    locationBox.getText().toString(), inviteesBox.getText().toString(),
-                    noteBox.getText().toString());
+            setFieldVars(this.startTimeBox.getText().toString(), this.endTimeBox.getText().toString(),
+                    this.locationBox.getText().toString(), this.inviteesBox.getText().toString(),
+                    this.noteBox.getText().toString());
             ServerHelper.createEvent(this.eventTitle, this.note, this.location,
                     this.startYearVar, this.startMonthVar, this.startDayVar,
                     this.startTimeVar, this.endYearVar, this.endMonthVar,
                     this.endDayVar, this.endTimeVar, Boolean.toString(this.isAllDay));
-            /** Delete **/
-            Log.d(TAG, "event title: " + this.eventTitle);
-            Log.d(TAG, "is all day? " + Boolean.toString(this.isAllDay));
-            Log.d(TAG, "start year: " + this.startYearVar);
-            Log.d(TAG, "start month: " + this.startMonthVar);
-            Log.d(TAG, "start day: " + this.startDayVar);
-            Log.d(TAG, "start time: " + this.startTimeVar);
-            Log.d(TAG, "end year: " + this.endYearVar);
-            Log.d(TAG, "end month: " + this.endMonthVar);
-            Log.d(TAG, "end day: " + this.endDayVar);
-            Log.d(TAG, "end time: " + this.endTimeVar);
-            Log.d(TAG, "location: " + this.location);
-            Log.d(TAG, "invitees: " + this.invitees);
-            Log.d(TAG, "note: " + this.note);
-            /** **/
             toastEventCreated(this.eventTitle); // Lets user know event was created.
             this.finish(); // Terminate activity.
         } else {
@@ -295,10 +375,6 @@ public class AddDelUpdEventActivity extends Activity {
      * Sets the default day and time for date and time picker.
      */
     private void setDefaultDateAndTime() {
-        final TextView endTimeBox = (TextView) this.findViewById(R.id.event_end_time);
-        final TextView startTimeBox = (TextView) this.findViewById(R.id.event_start_time);
-        final TextView startDateBox = (TextView) this.findViewById(R.id.start_date);
-        final TextView endDateBox = (TextView) this.findViewById(R.id.end_date);
         final Intent intent = getIntent();
         // Fill out the date and time parameters on start of activity based on day selected and current time.
         final int day = Integer.parseInt(intent.getStringExtra("day"));
@@ -317,10 +393,10 @@ public class AddDelUpdEventActivity extends Activity {
         // Generate the date information string.
         final String dateString = generateDateString(weekDay, dayStr, monthStr, yearStr);
         // Place date information string in both the star and end date fields.
-        startDateBox.setText(dateString);
-        endDateBox.setText(dateString);
-        startTimeBox.setText(this.startTimeVar); // Set the default start time for field.
-        endTimeBox.setText(this.endTimeVar); // Set the default end time for field.
+        this.startDateBox.setText(dateString);
+        this.endDateBox.setText(dateString);
+        this.startTimeBox.setText(this.startTimeVar); // Set the default start time for field.
+        this.endTimeBox.setText(this.endTimeVar); // Set the default end time for field.
     }
 
     /**

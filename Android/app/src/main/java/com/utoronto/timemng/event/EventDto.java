@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Contains information for the specified event.
  */
@@ -27,7 +24,6 @@ public class EventDto {
     private static final String DESCRIPTION = "description";
     private static final String IS_ALL_DAY = "isAllDay";
 
-    // TODO: change startYear, startMonth, startDayOfMonth, same thing for end.
     private final long eventId;
     private final String eventTitle;
     private final int startYear;
