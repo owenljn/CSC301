@@ -6,4 +6,20 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/core_action_prev"
+          android:title="@string/prev_button"
+          android:icon="@drawable/ic_action_previous_item"
+          android:showAsAction="always"/>
+    <item android:id="@+id/core_action_today"
+          android:title="@string/action_today"
+          android:icon="@drawable/ic_action_go_to_today"
+          android:showAsAction="always"/>
+    <item android:id="@+id/core_action_next"
+          android:title="@string/next_button"
+          android:icon="@drawable/ic_action_next_item"
+          android:showAsAction="always"/>
+    <item android:id="@+id/core_action_refresh"
+          android:title="@string/refresh_button"
+          android:icon="@drawable/ic_action_refresh"
+          android:showAsAction="ifRoom"/>
 </menu>

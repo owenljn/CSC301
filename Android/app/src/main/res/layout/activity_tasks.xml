@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/dayevents_box"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/customborder"
+              android:padding="6dp">
+    <LinearLayout android:id="@+id/date_panel"
+                  android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_horizontal">
+        <TextView android:id="@+id/date_text"
+                  android:text="@string/which_month"
+                  android:textAllCaps="true"
+                  android:textStyle="bold"
+                  android:textSize="19sp"
+                  android:layout_width="wrap_content"
+                  android:layout_height="40dp"/>
+    </LinearLayout>
+    <ListView android:id="@+id/event_list"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:dividerHeight="5dp">
+    </ListView>
+
+</LinearLayout>

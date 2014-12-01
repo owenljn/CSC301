@@ -3,6 +3,7 @@ package com.utoronto.timemng.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ public class CoreActivity extends Activity {
     GoogleCloudMessaging gcm;
     String regid;
     Context context;
+    private CalendarMonthConstructor calMnthConstr;
 
     /**
      * Substitute you own sender ID here. This is the project number you got
@@ -45,6 +47,7 @@ public class CoreActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_core);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.context = getApplicationContext();
 
         if (checkPlayServices()) {
@@ -65,7 +68,7 @@ public class CoreActivity extends Activity {
             // Prior to creating the first instance of the class, define the activity that will be used.
             CalendarMonthConstructor.defineActivity(this);
             // Get an instance of the calendar (only one instance of it since singleton pattern was used).
-            CalendarMonthConstructor.getInstance();
+            this.calMnthConstr = CalendarMonthConstructor.getInstance();
         }
         // TODO: could add some layout actions here
     }
@@ -222,6 +225,22 @@ public class CoreActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         final int id = item.getItemId();
-        return R.id.action_settings == id || super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.core_action_prev:
+                this.calMnthConstr.setPrevMonth();
+                return true;
+            case R.id.core_action_today:
+                this.calMnthConstr.setToday();
+                return true;
+            case R.id.core_action_next:
+                this.calMnthConstr.setNextMonth();
+                return true;
+            case R.id.core_action_refresh:
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
