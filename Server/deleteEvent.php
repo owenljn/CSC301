@@ -18,53 +18,84 @@ $rawData = urldecode($rawData);
 $name = explode("=", $rawData);
 
 $eventname = $name[1];
-$result = 'SELECT * FROM(SELECT * FROM events '.
-       'WHERE eventname = "'.$eventname.'")
-	   WHERE ';
-$result = 'SELECT * FROM events '.
-       'WHERE startYear = "'.$sy.'" AND startMonth =  "'.$sm.'" AND startDay =  "'.$sd.'" ';
+$dRow = 'SELECT * FROM events '.
+       'WHERE eventname = "'.$eventname.'"';
 $query = 'DELETE FROM events '.
        'WHERE eventname = "'.$eventname.'" ';
 	   
 mysql_select_db('TaskManager');
-mysql_query($query2, $conn);
-mysql_close($conn);
 
-function sendNotification( $apiKey, $registrationIdsArray, $messageData )
-{   
-    $headers = array("Content-Type:" . "application/json", "Authorization:" . "key=" . $apiKey);
-    $data = array(
-        'data' => $messageData,
-        'registration_ids' => $registrationIdsArray
+// First fetch the event to be deleted then get it's startYear, startMonth, startDay attributes
+$resultD = mysql_query($dRow, $conn);
+$d=mysql_fetch_assoc($resultD);
+$sy=$d['StartYear'];
+$sm=$d['StartMonth'];
+$sd=$d['StartDay'];
+
+// Then Delete this event
+mysql_query($query, $conn);
+
+// Now select all the events that start on the same day with the deleted event
+$returnAll = 'SELECT * FROM events '.
+       'WHERE startYear = "'.$sy.'" AND startMonth =  "'.$sm.'" AND startDay =  "'.$sd.'" ';
+$result = mysql_query($returnAll, $conn);
+
+// Now loop through the returned rows and format them to a JSON payload
+while($e=mysql_fetch_assoc($result)) {
+		$JSONevents = $JSONevents . "\"eventID\":".$e['id'] . ",\"eventTitle\":\"".$e['eventname'] . "\",\"startYear\":".$e['StartYear'] . ",\"startMonth\":".$e['StartMonth'] .",\"startDayOfMonth\":".$e['StartDay'] .",\"startTime\":\"".$e['StartTime'] . "\",\"endYear\":".$e['EndYear'] . ",\"endMonth\":".$e['EndMonth'] .",\"endDayOfMonth\":".$e['EndDay'] . ",\"endTime\":\"".$e['FinishTime'] . "\",\"location\":\"".$e['Location'] . "\",\"description\":\"".$e['description'] . "\",\"isAllDay\":".$e['settings'] . ",";
+		$JSONpayload ="{\"days\":[{\"year\":".$e['StartYear'] . ",\"month\":".$e['StartMonth']. ",\"day\":".$e['StartDay']. ",\"events\":[{";
+}
+rtrim($JSONevents, ',');
+$JSONpayload = $JSONpayload.$JSONevents;
+$JSONpayload = $JSONpayload."}]}]}";
+//$JSONpayload2 = "{\"days\":[{\"year\":2014,\"month\":10,\"day\":23,\"events\":[{\"eventId\":1,\"eventTitle\":\"CSC373H1F Test\",\"startYear\":2014,\"startMonth\":10,\"startDayOfMonth\":23,\"startTime\":\"20:00\",\"endYear\":2014,\"endMonth\":10,\"endDayOfMonth\":23,\"endTime\":\"21:00\",\"location\":\"Bahen\",\"description\":\"Bleh\",\"isAllDay\":false}]},{\"year\":2014,\"month\":10,\"day\":24,\"events\":[{\"eventId\":1,\"eventTitle\":\"Doctor Appointment\",\"startYear\":2014,\"startMonth\":10,\"startDayOfMonth\":24,\"startTime\":\"15:00\",\"endYear\":2014,\"endMonth\":10,\"endDayOfMonth\":24,\"endTime\":\"16:00\",\"location\":null,\"description\":\"fsdf\",\"isAllDay\":false}]}]\"}";
+$message = array($JSONpayload);
+$registrationId = array("APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg");
+$apiKey = "AIzaSyA82yCJnslrBvS7RQqr0VwBTtRZ0GPryqQ";
+
+    //Sending Push Notification
+function send_push_notification($registration_ids, $message, $apiKey) {
+         
+ 
+	// Set POST variables
+    $url = 'https://android.googleapis.com/gcm/send';
+ 
+    $fields = array(
+        'registration_ids' => $registration_ids,
+        'data' => array('payload' => $message),
     );
  
+    $headers = array(
+        'Authorization: key=' . $apiKey,
+        'Content-Type: application/json'
+    );
+    //print_r($headers);
+    // Open connection
     $ch = curl_init();
  
-    curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers ); 
-    curl_setopt( $ch, CURLOPT_URL, "https://android.googleapis.com/gcm/send" );
-    curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 0 );
-    curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0 );
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode($data) );
+    // Set the url, number of POST vars, POST data
+    curl_setopt($ch, CURLOPT_URL, $url);
  
-    $response = curl_exec($ch);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+ 
+    // Disabling SSL Certificate support temporarily
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+ 
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+ 
+    // Execute post
+    $result = curl_exec($ch);
+    if ($result === FALSE) {
+        die('Curl failed: ' . curl_error($ch));
+    }
+ 
+    // Close connection
     curl_close($ch);
- 
-    return $response;
+//    echo $result;
+	return $result;
 }
-// Message to send
-$message      = "the test message";
-$tickerText   = "ticker text message";
-$contentTitle = "content title";
-$contentText  = "content body";
- 
-$registrationId = 'APA91bH70aNVvJXIMD-NyasaokMWVp-t4934pFMOjE8O9XRJqVl3Wzr4XS4swDgZF-IRVXCTF0WpN-PW8acNIDe2bPyJO8xL96taexMm7C9e_6q_iNasrHnkVLfLr4J5MUhcs2ynzm0ZblkqRnjU0wkKiHffloIHQSNl-4IjXm7dny01hthG8Lg';
-$apiKey = "AIzaSyA82yCJnslrBvS7RQqr0VwBTtRZ0GPryqQ";
- 
-$response = sendNotification( 
-                $apiKey, 
-                array($registrationId), 
-                array('message' => $message, 'tickerText' => $tickerText, 'contentTitle' => $contentTitle, "contentText" => $contentText) );
- 
-echo $response;
+$response = send_push_notification($registrationId, $JSONpayload, $apiKey);
+mysql_close($conn);
 ?>
