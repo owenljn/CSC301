@@ -1,6 +1,15 @@
+## Timothy Chu(tckool)
+
+* My most significant contribution was the development of the back end PHP server and using it to query the database. I worked very closely with Matthew, Lingfei and Owen (on dynamic branch)
+
+* This was my first time working with both Android and PHP. Because I did not spend much time working on the frontend, I did not learn too much Android, but after spending lots of time on the server, I have gained a better understanding of how networks/remote servers work and how to use the AWS to host a PHP server.
+
+* My main strength for this project was debugging since I would not give up when looking for a solution to a problem until the solution was found. Also, my other strength was writing reports as I wrote the majority of the reports for this course. I would always volunteer to write the reports and would edit everyone else's reports for them.
+
+* One improvement for me would be taking more initiative to learn both Android and PHP rather than waiting for my group to help me learn. For example, in phase 2 I gave up trying to import the Android code and I had to rely on others. I should have taken more responsibility back then and worked it out.
+
+
 ## Name Li Wan(martylee)
-
-
 
 * My most significant contribution was the implementation of the front side of this android app, including the UI design. I have created a well-designed interface and uploaded it to the Github. The demo is developed by Angular JS.
 * While working on our Android app , I learned how to build the connection between a frontend mobile app and a backend server with the database for this app. I also got experienced with the Google Cloud Messaging (GCM) system, we use it to send message to the android  device.
